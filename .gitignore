@@ -1,0 +1,7 @@
+node_modules
+dist
+.vercel
+pipeline/.venv
+pipeline/out
+__pycache__
+.pytest_cache

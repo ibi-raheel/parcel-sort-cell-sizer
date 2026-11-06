@@ -1,0 +1,196 @@
+{
+ "stations": [
+  {
+   "station": "DLA7",
+   "metro": "DLA",
+   "days": 30,
+   "volume": {
+    "mean": 8810,
+    "p50": 8919,
+    "p90": 11436,
+    "max": 13206,
+    "p90_peak": 12579,
+    "days_above_mean_share": 0.6333333333333333,
+    "p90_over_mean": 1.2980264999886493
+   },
+   "packages_total": 264302,
+   "sortable_share": 0.9766441419285514,
+   "pts_per_5cm": 0.41713645753721496,
+   "max_zone_prefixes": 89,
+   "cells_hand_p90": 6,
+   "cells_hand_mean": 5,
+   "cells_erlang": 6,
+   "cells_des": 7,
+   "cells_for_destinations": 7,
+   "cells_for_zone_prefixes": 12,
+   "peak_rate_over_mean_rate": 1.8192192343239912
+  },
+  {
+   "station": "DLA9",
+   "metro": "DLA",
+   "days": 39,
+   "volume": {
+    "mean": 4448,
+    "p50": 4179,
+    "p90": 7595,
+    "max": 9433,
+    "p90_peak": 8355,
+    "days_above_mean_share": 0.4358974358974359,
+    "p90_over_mean": 1.7074752132810702
+   },
+   "packages_total": 173480,
+   "sortable_share": 0.9765621397279225,
+   "pts_per_5cm": 0.4280032280378099,
+   "max_zone_prefixes": 74,
+   "cells_hand_p90": 4,
+   "cells_hand_mean": 3,
+   "cells_erlang": 4,
+   "cells_des": 5,
+   "cells_for_destinations": 4,
+   "cells_for_zone_prefixes": 10,
+   "peak_rate_over_mean_rate": 1.81218694423924
+  },
+  {
+   "station": "DBO3",
+   "metro": "DBO",
+   "days": 29,
+   "volume": {
+    "mean": 4414,
+    "p50": 4257,
+    "p90": 6485,
+    "max": 7385,
+    "p90_peak": 7133,
+    "days_above_mean_share": 0.4482758620689655,
+    "p90_over_mean": 1.4690173961270767
+   },
+   "packages_total": 128017,
+   "sortable_share": 0.9637782482014108,
+   "pts_per_5cm": 0.4007280283087389,
+   "max_zone_prefixes": 54,
+   "cells_hand_p90": 5,
+   "cells_hand_mean": 3,
+   "cells_erlang": 5,
+   "cells_des": 5,
+   "cells_for_destinations": 4,
+   "cells_for_zone_prefixes": 7,
+   "peak_rate_over_mean_rate": 1.6954166666666666
+  },
+  {
+   "station": "DSE5",
+   "metro": "DSE",
+   "days": 38,
+   "volume": {
+    "mean": 3028,
+    "p50": 3116,
+    "p90": 4956,
+    "max": 5403,
+    "p90_peak": 5452,
+    "days_above_mean_share": 0.5526315789473685,
+    "p90_over_mean": 1.6369230769230774
+   },
+   "packages_total": 115050,
+   "sortable_share": 0.9722207735767058,
+   "pts_per_5cm": 0.42068665797479476,
+   "max_zone_prefixes": 38,
+   "cells_hand_p90": 3,
+   "cells_hand_mean": 2,
+   "cells_erlang": 3,
+   "cells_des": 4,
+   "cells_for_destinations": 3,
+   "cells_for_zone_prefixes": 5,
+   "peak_rate_over_mean_rate": 1.8479166666666669
+  },
+  {
+   "station": "DLA8",
+   "metro": "DLA",
+   "days": 29,
+   "volume": {
+    "mean": 3833,
+    "p50": 4020,
+    "p90": 5490,
+    "max": 6703,
+    "p90_peak": 6039,
+    "days_above_mean_share": 0.5517241379310345,
+    "p90_over_mean": 1.4323892977310757
+   },
+   "packages_total": 111154,
+   "sortable_share": 0.9754124907785595,
+   "pts_per_5cm": 0.46736959533620337,
+   "max_zone_prefixes": 48,
+   "cells_hand_p90": 3,
+   "cells_hand_mean": 2,
+   "cells_erlang": 3,
+   "cells_des": 4,
+   "cells_for_destinations": 3,
+   "cells_for_zone_prefixes": 6,
+   "peak_rate_over_mean_rate": 1.9604474908064091
+  },
+  {
+   "station": "DSE4",
+   "metro": "DSE",
+   "days": 39,
+   "volume": {
+    "mean": 2753,
+    "p50": 3050,
+    "p90": 4026,
+    "max": 4967,
+    "p90_peak": 4428,
+    "days_above_mean_share": 0.5641025641025641,
+    "p90_over_mean": 1.4620278626238548
+   },
+   "packages_total": 107384,
+   "sortable_share": 0.9717090069284064,
+   "pts_per_5cm": 0.44932205915219625,
+   "max_zone_prefixes": 32,
+   "cells_hand_p90": 3,
+   "cells_hand_mean": 3,
+   "cells_erlang": 3,
+   "cells_des": 3,
+   "cells_for_destinations": 3,
+   "cells_for_zone_prefixes": 4,
+   "peak_rate_over_mean_rate": 1.4548611111111112
+  }
+ ],
+ "assumptions": {
+  "CELL_RATE_H": 500.0,
+  "CUTOFF_H": 0.5,
+  "ENVELOPE": {
+   "max_l": 60.0,
+   "max_m": 45.0,
+   "max_s": 35.0,
+   "min_s": 0.0
+  },
+  "GAYLORDS_PER_CELL": 8,
+  "INBOUND_CLOSE_H": 1.0,
+  "INBOUND_OPEN_H": 3.0,
+  "MANUAL_RATE_H": 287.5,
+  "MISS_TARGET": 0.01,
+  "PEAK_UPLIFT": 0.1,
+  "SERVICE_CV": 0.25,
+  "UTC_OFFSET_H": {
+   "DLA": -7,
+   "DSE": -7,
+   "DBO": -4,
+   "DCH": -5,
+   "DAU": -5
+  },
+  "WAGE_H": 18.1
+ },
+ "dataset": {
+  "name": "Amazon Last Mile Routing Research Challenge 2021 (training split)",
+  "url": "https://registry.opendata.aws/amazon-last-mile-challenges/",
+  "licence": "CC BY-NC 4.0",
+  "routes": 6112,
+  "packages": 1457175,
+  "stations": 17,
+  "dates": [
+   "2018-07-19",
+   "2018-08-26"
+  ],
+  "reconciliation": {
+   "parsed": 1457175,
+   "raw_key_count": 1457175
+  },
+  "all_sortable_share": 0.9715888620103968
+ }
+}
