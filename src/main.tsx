@@ -27,14 +27,14 @@ function App() {
         Precomputed results; the interactive walkthrough comes in the next pass.</p>
       <div className="scroll"><table>
         <caption>Cells needed per station at +10% peak (500 sorts/h per cell, &lt;1% of parcels late)</caption>
-        <thead><tr><th>Station</th><th>Days</th><th>Mean/day (sample)</th><th>P90/day (sample)</th><th>Robot-sortable</th><th>Peak 15-min rate ÷ mean</th><th>Cells: hand rule</th><th>Cells: lower bound</th><th>Cells: earliest-cutoff-first</th><th>Cells: FIFO simulation</th></tr></thead>
+        <thead><tr><th>Station</th><th>Days</th><th>Mean/day (sample)</th><th>P90/day (sample)</th><th>Robot-sortable</th><th>Peak 15-min inbound ÷ mean (modelled)</th><th>Cells: hand rule</th><th>Cells: lower bound</th><th>Cells: earliest-cutoff-first</th><th>Cells: FIFO simulation</th><th>Cells: destinations (8 per cell)</th></tr></thead>
         <tbody>{s.stations.map(r => (
           <tr key={r.station}><td>{r.station}</td><td>{r.days}</td><td>{r.volume.mean.toLocaleString()}</td><td>{r.volume.p90.toLocaleString()}</td>
             <td>{pct(r.sortable_share)}</td><td>{r.peak_rate_over_mean_rate.toFixed(2)}</td>
-            <td>{r.cells_hand_p90}</td><td>{r.cells_bound_1pct}</td><td>{r.cells_edf20 ?? '>max'}</td><td><strong>{r.cells_des ?? '>max'}</strong></td></tr>))}
+            <td>{r.cells_hand_p90}</td><td>{r.cells_bound_1pct}</td><td>{r.cells_edf20 ?? '>max'}</td><td><strong>{r.cells_des ?? '>max'}</strong></td><td>{r.cells_for_destinations}</td></tr>))}
         </tbody>
       </table></div>
-      <p className="credit">Data: <a href={d.url}>{d.name}</a>, {d.routes.toLocaleString()} routes, {d.packages.toLocaleString()} packages, {d.stations} stations, {d.dates[0]} to {d.dates[1]}. Licence {d.licence}. Volumes are packages on the routes in the public sample, not total station throughput. Inbound timing is a stated assumption (see METHOD.md).</p>
+      <p className="credit">Data: <a href={d.url}>{d.name}</a>, {d.routes.toLocaleString()} routes, {d.packages.toLocaleString()} packages, {d.stations} stations, {d.dates[0]} to {d.dates[1]}. Licence {d.licence}. Volumes are packages on the routes in the public sample, not total station throughput. Inbound timing is a stated assumption (each route arrives 3 h to 1 h before its real departure), so the peak ratio and all cell counts are modelled; see METHOD.md.</p>
     </main>
   )
 }

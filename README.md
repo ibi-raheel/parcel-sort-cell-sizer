@@ -7,12 +7,12 @@ A pre-sales sizing tool for robotic parcel sort cells: from a delivery station's
 ## The problem
 Robotic sort systems are sold one site at a time, and each proposal needs a cell count and a business case. The usual spreadsheet divides the day's volume by the sort window. Outbound departures come in waves, though, and the waves concentrate inbound into short peaks.
 
-## What it shows (measured on 1.46 M real packages, six stations)
-- **The wave.** Clustered real route departures push peak 15-minute inbound to 1.45–1.96× the shift average. A bank sized on average throughput is one cell short of a first-come-first-served bank at 3 of 6 stations. One cell short leaves 5.5–34% of parcels late on the design day, and 64–100% of routes with a late parcel.
-- **Deadline-aware induction.** A scheduling lower bound (processor-demand criterion) gives the fewest cells any policy could use. Earliest-cutoff-first induction reaches that floor at all six stations and saves one cell over FIFO at four of them (24 against 28 cells), subject to destinations per cell.
-- **Dollars, with no price assumed.** Manual sorters are simulated under the same wave and late-parcel rule. At one operator per cell, a cell at the largest station pays back in 24 months if it costs under about $35k, or about $59k with one operator per two cells. At two operators per cell, labour alone never pays back.
-- **What flips the count.** Sweeping each assumption shows the order to measure on a site visit: sustained cell rate (flips about 11% below nameplate), peak uplift, then the inbound arrival curve. Service-time variability never changes the count.
-- **A data catch.** In this public sample, daily volume tracks the number of routes sampled (correlation 0.99–1.00). So the design day is built from routes × packages per route, with day-block bootstrap intervals, and the "busy-day ratio" is reported as a sampling artefact rather than demand.
+## What it shows (six stations, 899,387 real packages from a 1.46 M-package public dataset)
+- **The wave.** The dataset has no inbound scan times, so each route's parcels are modelled as arriving 3 h to 1 h before its real departure. Under that assumption, clustered real departures push peak 15-minute inbound to 1.45–1.96× the shift average. In simulation, a bank sized on average throughput is one cell short of a first-come-first-served bank at 3 of 6 stations, and one cell short leaves 5.5–34% of parcels late on the design day, with 64–100% of routes holding a late parcel.
+- **Deadline-aware induction.** A scheduling lower bound (processor-demand criterion, on the expected inbound under the same assumption) gives the fewest cells any policy could use. In simulation, earliest-cutoff-first induction reaches that floor at all six stations and saves one cell over FIFO on throughput at four of them (24 against 28 cells). At DLA7 the 51 route destinations still need 7 cells at 8 per cell, so with 8 destinations per cell the saving holds at three stations.
+- **Dollars, with no price assumed.** Manual sorters are simulated under the same wave and late-parcel rule. Counting labour savings only (before maintenance, software and other running costs, which lower these figures), at one operator per cell a cell at the largest sampled station pays back in 24 months if it costs under about $35k, or about $59k with one operator per two cells. At two operators per cell, labour alone never pays back.
+- **What flips the count.** Sweeping each assumption shows the order to measure on a site visit: sustained cell rate (flips about 11% below nameplate), peak uplift, then the inbound arrival curve. (Cell rate and peak uplift are nearly the same lever: both move load against capacity.) Service-time variability (CV 0.1 to 1.0) never changes the count.
+- **A data catch.** In this public sample, daily volume tracks the number of routes sampled (correlation 0.986–0.997). So the design day is built from routes × packages per route, with day-block bootstrap intervals, and the "busy-day ratio" is reported as a sampling artefact rather than demand.
 - **Pick-envelope fit.** 96.4–97.7% of parcels fit a 60 × 45 × 35 cm envelope (an editable assumption). Moving the longest-side limit by 5 cm changes that by under half a point.
 
 ## How it works
@@ -25,7 +25,7 @@ Robotic sort systems are sold one site at a time, and each proposal needs a cell
 - `business.py`: manual-equivalent labour, annual delta, break-even capex per cell.
 - Results are precomputed to `public/data/*.json`; the web page is static and needs no API keys.
 
-See [METHOD.md](METHOD.md) for equations, assumptions, validation (hand calculations, bound ≤ EDF ≤ FIFO ladder, DES vs M/M/c theory, Little's law, factor-split holdout), sensitivity flip points and limitations.
+See [METHOD.md](METHOD.md) for equations, assumptions, validation (hand calculations, bound ≤ EDF ≤ FIFO ladder, DES vs M/M/c theory, Little's law, factor-split holdout), sensitivity flip points and limitations (§6, §7).
 
 ## Run locally
 ```bash

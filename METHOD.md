@@ -16,7 +16,7 @@ This tool answers one pre-sales question for a robotic parcel sort cell: **how m
 
 **Reconciliation.** Packages parsed = 1,457,175. An independent byte count of the `"PackageID_` key in the raw file = 1,457,175. They match exactly.
 
-**Stations analysed.** The six stations with at least 28 observed days and the most packages: DLA7, DLA9, DBO3, DSE5, DLA8, DSE4.
+**Stations analysed.** The six stations with at least 28 observed days and the most packages: DLA7, DLA9, DBO3, DSE5, DLA8, DSE4. Together they hold 899,387 of the 1,457,175 packages; all sizing results use these six, and only the overall envelope share uses the full set.
 
 **Important scope note.** The public sample contains a subset of each station's routes. "Daily volume" here means packages on the routes in the sample, not the station's total throughput. The method is unchanged at full volume; the absolute cell counts scale with it.
 
@@ -93,7 +93,7 @@ with $[A_r,B_r]$ route *r*'s inbound window and $K_r$ its cutoff. $t_2$ runs ove
 
 \*The average-day rule is shown for reference only: its gap to the design day comes from sample coverage (§2).
 
-- **The ladder validates the simulation's extra cell.** The 1%-late floor is a hard limit for any policy. EDF reaches it at all six stations. FIFO sits one cell above it at 4 of 6 (DLA7, DLA9, DSE5, DLA8). So the extra cell in the FIFO simulation is real and not a modelling artefact: it is the cost of serving parcels in arrival order when departures are clustered.
+- **The ladder checks the simulation's extra cell.** The 1%-late floor is a lower bound for any policy on the expected (fluid) inbound under the §5 inbound assumption; a single random day can fall slightly below it. EDF reaches it at all six stations. FIFO sits one cell above it at 4 of 6 (DLA7, DLA9, DSE5, DLA8). So the extra FIFO cell is not a simulation bug: within this model it is the cost of serving parcels in arrival order when departures are clustered. Whether it appears on a real floor depends on the real inbound curve (§5f).
 - **Deadline-aware induction saves one cell on throughput at 4 of 6 stations** (24 cells against 28 in total), under the stated inbound assumption. At DLA7 the 51 route destinations still need 7 cells at 8 gaylords each, so the saving is realised there only with 9 or more destinations per cell; at DLA9, DSE5 and DLA8 it holds with 8. Where EDF saves nothing (DBO3, DSE4), FIFO is already at the floor and there is no slack.
 - **One cell short (FIFO, design day):** DLA7 6 cells → 6.7% of parcels (823) late, 73% of routes with a late parcel; DLA9 6.5%, 67%; DBO3 18.6%, 100%; DSE5 10.4%, 93%; DLA8 5.5%, 64%; DSE4 34%, 100%.
 - **Uncertainty from the sample.** Across 200 bootstrap design days, the FIFO count that clears 90% of them is one higher than the point estimate at DLA7, DBO3 and DSE4.
@@ -129,7 +129,7 @@ $H$ = paid hours per sort day = sort span rounded up to 0.5 h (DLA7: 4.5 h); 300
 | DLA8 | 7 | 4 | $119,500 | $59,700 | $59,700 / $29,900 | negative |
 | DSE4 | 6 | 3 | $57,000 | $32,600 | $38,000 / $21,700 | negative |
 
-**Reading.** At 500/h a cell replaces about 1.8 manual sorters at 275/h. The labour case therefore turns on the operator ratio, not the cell count: at one operator per cell, a DLA7 cell pays back in 24 months if it costs under about $35k; with one operator tending two cells, under about $59k; at two operators per cell, labour alone never pays it back. At 300/h manual, DLA7's break-even falls to $27.9k (1 op) and $52.4k (0.5 op). Cost of one cell short: see §5 (e.g. DLA7 loses 823 parcels per peak day, needing at least 1 extra manual head across the span to recover them; this is a lower bound because the late parcels cluster in the peak).
+**Reading.** These are labour savings only. Break-even capex excludes cell maintenance, software, power and other running costs, so the true break-even is lower; volumes are the public sample's (§1). At 500/h a cell replaces about 1.8 manual sorters at 275/h. The labour case therefore turns on the operator ratio, not the cell count: at one operator per cell, a DLA7 cell pays back in 24 months if it costs under about $35k; with one operator tending two cells, under about $59k; at two operators per cell, labour alone never pays it back. At 300/h manual, DLA7's break-even falls to $27.9k (1 op) and $52.4k (0.5 op). Cost of one cell short: see §5 (e.g. DLA7 loses 823 parcels per peak day, needing at least 1 extra manual head across the span to recover them; this is a lower bound because the late parcels cluster in the peak).
 
 ### 5h. Week-1 site measurements
 
@@ -139,7 +139,40 @@ Ranked by how little each input has to move (median across stations, relative to
 2. **Peak-season volume uplift**: flips at about +13% relative volume (DLA7 at 19% uplift, DSE4 at 13%). Get the customer's last peak, by route.
 3. **Inbound trailer arrival curve**: if inbound starts about 18% later (DLA7 2.44 h instead of 3 h before departure), the count rises. This is the synthetic assumption; replace it with the trailer schedule and scan timestamps.
 
-The cutoff buffer (median 34% margin) and the inbound close time (flip at only 3 of 6 stations) matter less.
+Items 1 and 2 are nearly the same lever (a cell-rate drop of 11% equals about 12% more volume per cell), so in practice they are one measurement of load against capacity. The cutoff buffer (median 34% margin) and the inbound close time (flip at only 3 of 6 stations) matter less. Flip points use 4 replications per point, so a flip within a few percent of the base (DSE4 cell rate, 491/h) is within simulation noise.
+
+## 6. Validation
+
+All figures are from `public/data/validation.json`, written by `pipeline/scripts/validate.py`.
+
+1. **Hand calculation (DLA7 design day).** $V^{*}$ = 12,537, $e$ = 0.0234, $T$ = 4.392 h. $12{,}537 \times 0.9766 / (4.392 \times 500) = 5.58 \Rightarrow 6$ cells. Tool: 6. Match.
+2. **Deadline floor by hand** (unit test). One route, 1,000 parcels arriving uniformly over $[D-3\,\text{h}, D-1\,\text{h}]$, due $D-0.5$ h, $\mu$ = 500/h: the worst window is the full 2.5 h, $1000/(500 \times 2.5) = 0.8 \Rightarrow 1$ cell. Two such routes of 1,500: 2.4 ⇒ 3. Allowing 600 late: 1.92 ⇒ 2.
+3. **EDF vs FIFO trace by hand** (unit test). Two servers, unit service; four parcels at $t=0$ due at 10, one at $t=0.5$ due at 2. FIFO finishes the last parcel at 3 (late); EDF serves it at $t=1$ and meets every deadline. Priority dispatch keyed on arrival order reproduces the FIFO simulator exactly.
+4. **Ladder on the real stations.** 1%-late floor ≤ EDF ≤ FIFO at all six (asserted in a test on the exported results).
+5. **DES vs Erlang C theory** (Poisson arrivals, exponential service, 200k parcels, 10% warm-up dropped):
+
+   | λ/h | c | P(wait) theory | P(wait) sim | Wq theory (s) | Wq sim (s) |
+   |---|---|---|---|---|---|
+   | 1,400 | 4 | 0.429 | 0.425 | 2.57 | 2.48 |
+   | 1,800 | 4 | 0.788 | 0.785 | 14.18 | 14.06 |
+   | 4,000 | 9 | 0.653 | 0.646 | 4.70 | 4.66 |
+
+6. **Little's law** $L_q = \lambda W_q$, with $L_q$ sampled at 50,000 random instants: 0.974 vs 0.965; 7.10 vs 7.04; 5.24 vs 5.19 (all within 1%).
+7. **Factor-split time holdout.** Train on days before 2018-08-15, test on the later days (3 test days at DLA7, DBO3 and DLA8; 12 at the others). Mean sampled routes per day rose 30–81% at 5 of 6 stations (DLA8 fell 10%), while packages per route changed by −1% to −11%. The apparent volume trend therefore comes from sample coverage, not demand. With 3 test days at half the stations, this is a consistency check, not a forecast test.
+8. **Reconciliation.** Parsed package count equals the raw key count (1,457,175).
+
+Tests: `pipeline/tests/` (24 pytest tests): Erlang C textbook value (A=2, c=3 → 4/9), M/M/1 reduction, instability flag, hand-calc rounding, Erlang monotonicity, DES vs Erlang C, Little's law, a single-server trace worked by hand, gamma mean/CV, wave-window bounds, monotonicity in *c*, NaN-filter split points, ingest on a fixture, envelope box rule, deadline floor by hand, floor ≥ hand rule and zero-late impossible below the floor, EDF vs FIFO hand trace, arrival-keyed priority = FIFO, EDF never worse than FIFO on a wave, coverage diagnostic, bootstrap interval coverage, bootstrap days use real departure sets, ladder order on the exported results, labour case by hand.
+
+## 7. Limitations
+
+- Volumes are the public route sample, not full station throughput (§1). The design route count is a sample-coverage bound with a bootstrap interval, not the station's true route count.
+- Inbound timing is synthetic (uniform 3 h → 1 h before each real departure). The wave ratio, the floor and the EDF saving all rest on it; §5f gives the flip points, and the inbound curve is the third item on the week-1 list.
+- Only 29–39 days per station, one summer. No forecast model is fitted because ~30 points per station do not support one honestly.
+- The simulation pools cells behind one queue. Destination-to-cell assignment and recirculation are not simulated and can only raise the count; at DLA7 destinations already bind at 7 cells with 8 per cell, which cancels the EDF saving there.
+- The bootstrap design days use FIFO only with 2 replications each; the EDF ladder runs on the point design day only. Sensitivity flip points use 4 replications per point.
+- The break-even capex is labour-only; it ignores cell maintenance, software and other running costs. Cost of one cell short gives overflow heads only as a lower bound.
+- The envelope is a parametric box with no weight or material (polybag, irregular) rules; the dataset has no weights.
+- Cell rate, manual rate and wage are published figures, not measured here.
 
 ## Business-case inputs (exported for the UI)
 Manual sorter rate 275–300 parcels/h (midpoint 287.5, published industry figure); wage $18.10/h (BLS OEWS May 2023 national median, SOC 53-7062, public domain). Capex per cell is never assumed; §5g reports the break-even capex per cell instead. Payback months $= 12 \cdot \text{capex} / (\text{annual manual labour} - \text{annual robot labour} - \text{opex})$.
