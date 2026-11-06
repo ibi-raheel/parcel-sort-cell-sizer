@@ -72,7 +72,7 @@ $c_{erlang}$ = smallest *c* with $P(W_q > 0.5\,\text{h}) < 1\%$ at the span-aver
 | DLA8 | 2 | 3 | 3 | **4** |
 | DSE4 | 3 | 3 | 3 | **3** |
 
-- Sizing on the average day under-builds at 5 of 6 stations, by 1–2 cells (18 cells in total across the six, against 28 from the simulation).
+- Sizing on the average day under-builds at 5 of 6 stations, by 2 cells at each (18 cells in total across the six, against 28 from the simulation).
 - Even P90-based steady-state sizing (hand rule or Erlang C, which agree everywhere) is one cell short at 4 of 6 stations, because the departure waves concentrate inbound.
 - DLA7 detail: with 6 cells, 3.6% of parcels are late and 58% of routes have at least one late parcel; with 7 cells, none are late and the P95 queue wait is 20 min.
 
