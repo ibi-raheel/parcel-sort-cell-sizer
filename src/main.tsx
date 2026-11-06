@@ -24,7 +24,7 @@ function App() {
       <h1>Parcel Sort Cell Sizer</h1>
       <p>How many robotic sort cells a delivery station needs to clear its dispatch waves on a P90 day, from real parcel data.
         Precomputed results; the interactive walkthrough comes in the next pass.</p>
-      <table>
+      <div className="scroll"><table>
         <caption>Cells needed per station at +10% peak (500 sorts/h per cell, &lt;1% of parcels late)</caption>
         <thead><tr><th>Station</th><th>Days</th><th>Mean/day</th><th>P90/day</th><th>P90 ÷ mean</th><th>Robot-sortable</th><th>Peak 15-min rate ÷ mean</th><th>Cells: mean rule</th><th>Cells: P90 rule</th><th>Cells: Erlang C</th><th>Cells: wave simulation</th></tr></thead>
         <tbody>{s.stations.map(r => (
@@ -32,7 +32,7 @@ function App() {
             <td>{r.volume.p90_over_mean.toFixed(2)}</td><td>{pct(r.sortable_share)}</td><td>{r.peak_rate_over_mean_rate.toFixed(2)}</td>
             <td>{r.cells_hand_mean}</td><td>{r.cells_hand_p90}</td><td>{r.cells_erlang}</td><td><strong>{r.cells_des ?? '>max'}</strong></td></tr>))}
         </tbody>
-      </table>
+      </table></div>
       <p className="credit">Data: <a href={d.url}>{d.name}</a>, {d.routes.toLocaleString()} routes, {d.packages.toLocaleString()} packages, {d.stations} stations, {d.dates[0]} to {d.dates[1]}. Licence {d.licence}. Volumes are packages on the routes in the public sample, not total station throughput. Inbound timing is a stated assumption (see METHOD.md).</p>
     </main>
   )

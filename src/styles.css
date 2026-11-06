@@ -1,8 +1,10 @@
 body { margin: 0; font: 15px/1.5 system-ui, sans-serif; color: #1b1a17; background: #f4f1ea; }
-main { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+main { max-width: 1280px; margin: 0 auto; padding: 32px 20px; }
 h1 { font-size: 28px; margin: 0 0 8px; }
-table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
 caption { text-align: left; font-weight: 600; padding: 12px 0 6px; }
-th, td { border-bottom: 1px solid #cfc8b8; padding: 6px 10px; text-align: right; white-space: nowrap; }
+th, td { border-bottom: 1px solid #cfc8b8; padding: 6px 10px; text-align: right; }
+th { vertical-align: bottom; font-size: 13px; }
 th:first-child, td:first-child { text-align: left; }
 .credit { color: #5b564c; font-size: 13px; }
