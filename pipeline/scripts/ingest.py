@@ -1,5 +1,5 @@
 """Step 1: raw JSON -> compact package table (out/packages.npz, out/routes.json)."""
-import json, sys, time
+import json, os, sys, time
 from pathlib import Path
 
 import numpy as np
@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from sizer.ingest import build_table, count_package_ids  # noqa: E402
 
 raw = Path(sys.argv[1])
-out = Path(__file__).resolve().parents[1] / "out"
+out = Path(os.environ.get("SIZER_CACHE", Path(__file__).resolve().parents[1] / "out"))
 out.mkdir(exist_ok=True)
 t = time.time()
 T = build_table(raw / "package_data.json", raw / "route_data.json")

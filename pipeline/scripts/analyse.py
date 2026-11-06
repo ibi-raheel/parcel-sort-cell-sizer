@@ -1,5 +1,5 @@
 """Steps 2-6: volume profile, envelope fit, destinations, sizing (Erlang C, hand calc, DES), export."""
-import json, math, sys
+import json, math, os, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -12,7 +12,7 @@ from sizer.envelope import share, sweep_longest, within  # noqa: E402
 from sizer.queueing import cells_erlang, cells_hand  # noqa: E402
 from sizer.sim import miss_curve  # noqa: E402
 
-OUT = ROOT / "out"
+OUT = Path(os.environ.get("SIZER_CACHE", ROOT / "out"))  # intermediate tables
 WEB = ROOT.parent / "public" / "data"
 WEB.mkdir(parents=True, exist_ok=True)
 meta = json.loads((OUT / "routes.json").read_text())
