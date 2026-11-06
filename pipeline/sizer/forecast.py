@@ -28,6 +28,8 @@ import numpy as np
 Q = 0.9
 FEATURES = ["station", "dow", "hour", "routes", "cap_mean", "big_share", "routes_ratio",
             "ppr7", "ppr_all", "ppr_last", "ppr_dow", "ppr_sd", "ppr_hour", "glob_dow"]
+# Wave-size buckets for the size-aware simple rule: 1 | 2-3 | 4-6 | 7+ routes (fixed in advance, not tuned).
+SIZE_EDGES = [1.5, 3.5, 6.5]
 
 
 # ---------------------------------------------------------------- metrics
@@ -211,6 +213,9 @@ def run_level(P: Panel, level: str, h: int, start: int = 14, block: int = 5, min
     names = ["model", "trailing_mean_x1.3", "same_weekday_last_week", "routes_x_ppr_calibrated"]
     if level != "day":
         names.append("routes_x_hour_ppr_calibrated")
+    if level == "wave":
+        names.append("routes_x_ppr_calibrated_by_wave_size")
+    size_b = np.digitize(routes, SIZE_EDGES)
     f = {k: np.full(len(y), np.nan) for k in names}
     f["trailing_mean_x1.3"] = baseline_trailing_mean(P, U, h, level)
     f["same_weekday_last_week"], lw_fb = baseline_last_week(P, U, h, level)
@@ -228,8 +233,16 @@ def run_level(P: Panel, level: str, h: int, start: int = 14, block: int = 5, min
         kh = float(np.quantile(y[tr] / raw_h[tr], Q))
         if level != "day":
             f["routes_x_hour_ppr_calibrated"][te] = kh * raw_h[te]
+        k_size = {}
+        if level == "wave":
+            # same rule, but one multiplier per wave-size bucket, each fitted on the training fold only
+            for b in np.unique(size_b[te]):
+                trb = tr & (size_b == b)
+                k_size[int(b)] = float(np.quantile(y[trb] / raw[trb], Q)) if trb.sum() >= 20 else k
+                teb = te & (size_b == b)
+                f["routes_x_ppr_calibrated_by_wave_size"][teb] = k_size[int(b)] * raw[teb]
         folds.append({"test_days": [P.dates[t0], P.dates[t1]], "train_units": int(tr.sum()), "test_units": int(te.sum()),
-                      "calibration_k": k, "calibration_k_hour": kh})
+                      "calibration_k": k, "calibration_k_hour": kh, "calibration_k_by_wave_size": k_size})
     ev = ~np.isnan(f["model"])
     if eval_mask_fn is not None:
         ev &= eval_mask_fn(U)

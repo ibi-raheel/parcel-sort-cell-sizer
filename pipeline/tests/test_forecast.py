@@ -122,3 +122,21 @@ def test_exported_forecast_is_consistent():
     for h, sz in F["sizing"].items():
         for row in sz["rows"]:
             assert row["cells_needed_actual"] >= 1
+
+
+def test_size_aware_rule_uses_training_fold_only():
+    # one route per wave (4 waves a day) -> every wave is in the 1-route bucket, so the size-aware rule
+    # must equal the pooled calibrated rule, with one multiplier per fold
+    rng = np.random.default_rng(2)
+    st, day, hr, cp, n = [], [], [], [], []
+    for d in range(30):
+        for hour in (6, 7, 8, 9):
+            st.append("S1"); day.append(d); hr.append(hour); cp.append(3e6); n.append(float(rng.integers(150, 300)))
+    r = run_level(Panel(st, day, hr, cp, n, DATES), "wave", 1)
+    f = r["_eval"]["f"]
+    m = ~np.isnan(f["routes_x_ppr_calibrated_by_wave_size"])
+    assert m.sum() > 50
+    assert np.allclose(f["routes_x_ppr_calibrated_by_wave_size"][m], f["routes_x_ppr_calibrated"][m])
+    for fold in r["folds"]:
+        assert set(fold["calibration_k_by_wave_size"]) == {0}
+        assert fold["calibration_k_by_wave_size"][0] == pytest.approx(fold["calibration_k"])
