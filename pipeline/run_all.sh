@@ -7,8 +7,9 @@ B=https://amazon-last-mile-challenges.s3.us-west-2.amazonaws.com/almrrc2021/almr
 mkdir -p "$RAW"
 for f in route_data.json package_data.json; do [ -s "$RAW/$f" ] || curl -sS -o "$RAW/$f" "$B/$f"; done
 export SIZER_CACHE="${SIZER_CACHE:-$RAW/derived}"
-export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2
+export OMP_NUM_THREADS=3 MKL_NUM_THREADS=3 OPENBLAS_NUM_THREADS=3
 .venv/bin/python -I scripts/ingest.py "$RAW"
 .venv/bin/python -I scripts/analyse.py
 .venv/bin/python -I scripts/validate.py > /dev/null
+.venv/bin/python -I scripts/forecast.py
 .venv/bin/python -m pytest -q

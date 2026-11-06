@@ -141,6 +141,58 @@ Ranked by how little each input has to move (median across stations, relative to
 
 Items 1 and 2 are nearly the same lever (a cell-rate drop of 11% equals about 12% more volume per cell), so in practice they are one measurement of load against capacity. The cutoff buffer (median 34% margin) and the inbound close time (flip at only 3 of 6 stations) matter less. Flip points use 4 replications per point, so a flip within a few percent of the base (DSE4 cell rate, 491/h) is within simulation noise.
 
+### 5i. P90 volume forecast: a trained quantile model against simple rules
+
+Sizing turns on one number per departure wave: how many parcels the 90th-percentile day puts on the routes leaving in that hour. §2 builds the design day from history by hand. This section trains a model to forecast that P90 ahead of time and checks it the way a sizing decision would: by the cells it buys and the parcels it leaves late. Code: `sizer/forecast.py`, `scripts/forecast.py`; results: `public/data/forecast.json`.
+
+**Task.** Forecast the P90 of parcel volume for date $D$ at origin $O = D - h$, for $h$ = 1 day and $h$ = 7 days, at three grains: station-day, **wave** (station × date × local departure hour) and single route. Known at the origin: the planned route count and departure hours for $D$ (stations plan routes with their delivery partners ahead of the day; in this sample the "planned" count is the sampled count, see §7), the vehicle mix (share of the larger van class), weekday, and the station's history up to and including $O$. Nothing dated after $O$ enters a feature (unit test perturbs every later day and checks the features do not move).
+
+**Model.** Gradient-boosted trees with quantile (pinball) loss, $q = 0.9$ (scikit-learn `HistGradientBoostingRegressor`, 300 trees, 15 leaves, learning rate 0.04, min 20 per leaf). It forecasts packages per route and multiplies by the planned route count. Because the route count is known, $q_{0.9}(y) = R \cdot q_{0.9}(y/R)$ exactly, and training with weight $R$ makes the training loss the pinball loss on $y$. Features: station (categorical), weekday, departure hour, routes in the unit, mean vehicle capacity, large-van share, routes today ÷ station's mean routes, station packages per route (last 7 days, all history, last day, same weekday last observed, and its day-to-day s.d.), station packages per route for that hour, and the all-station weekday effect. Pooled over all 17 stations.
+
+**Baselines** (all forecast $y$ for the same unit):
+1. **Trailing mean × 1.3**: mean of the unit's volume over observed days in $(O-7, O]$, times 1.3.
+2. **Same weekday last week**: the unit's volume on $D-7$ (else $D-14$) if it is on or before the origin; otherwise the unscaled trailing mean.
+3. **Routes × packages per route, calibrated** (the honest simple rule, and what §2 does by hand): $R \cdot \bar n_{7}\cdot k$, with $\bar n_7$ the station's trailing 7-day packages per route and $k$ the 90th percentile of $y / (R\bar n_7)$ on the training fold only.
+4. **Same, per departure hour**: as 3 but with the station's packages per route for that hour.
+
+**Validation.** Rolling origin with whole dates as blocks: five test blocks of five consecutive dates (2018-08-02 to 2018-08-26); each fold trains only on units dated on or before (first test date − $h$). A test unit needs at least 3 observed history days. Score = mean pinball loss at $q = 0.9$ (lower is better), plus coverage (share of actuals at or below the forecast; target 0.90). Uncertainty: paired bootstrap over test dates (2,000 resamples of whole dates) on the loss difference.
+
+**Forecast accuracy (all 17 stations; pinball loss in parcels, coverage in brackets):**
+
+| Grain, horizon | Units | Model | Trailing mean × 1.3 | Same weekday last week | Routes × ppr, calibrated | Routes × hour ppr | Model vs routes × ppr: loss reduction (90% CI) |
+|---|---|---|---|---|---|---|---|
+| Day, 1 d | 299 | 25.2 (0.85) | 278.0 (0.71) | 640.4 (0.44) | 26.2 (0.91) | – | 3.8% (−6.0% to 12.6%) **not significant** |
+| Day, 7 d | 221 | 31.5 (0.83) | 406.0 (0.58) | 665.5 (0.44) | 32.4 (0.91) | – | 2.8% (−7.8% to 12.4%) **not significant** |
+| **Wave, 1 d** | 835 | **11.5** (0.87) | 181.3 (0.56) | 334.6 (0.39) | 14.6 (0.90) | 15.7 (0.94) | **21.1% (15.9% to 26.1%)** |
+| **Wave, 7 d** | 835 | **13.3** (0.87) | 228.1 (0.53) | 334.8 (0.39) | 16.7 (0.92) | 18.8 (0.96) | **20.5% (15.9% to 25.2%)** |
+| Route, 1 d | 3,861 | 4.6 (0.89) | 7.4 (1.00) | 10.3 (0.55) | 4.9 (0.90) | 5.1 (0.94) | 5.7% (4.6% to 6.8%) |
+| Route, 7 d | 3,861 | 4.8 (0.90) | 7.9 (1.00) | 10.3 (0.55) | 5.0 (0.90) | 5.1 (0.94) | 5.8% (4.5% to 7.2%) |
+
+On the six sized stations alone the wave-level reduction is 26.7% (19.1% to 33.5%) at 1 day and 24.2% (18.3% to 29.9%) at 7 days.
+
+**Reading.**
+- **The two naive rules are not usable here**, and the reason is §2's coverage finding: they ignore how many routes leave that day, which explains 99% of daily volume. "Same weekday last week" covers the actual only 39–44% of the time. Beating them is easy and is not the claim.
+- **At the day grain the model does not beat the honest rule.** The 90% interval on the difference spans zero at both horizons, and the model's coverage (0.83–0.85) is below target. For a daily total, routes × packages per route × one calibrated multiplier is as good as the model.
+- **At the wave grain, which is what sizes a cell bank, the model wins by about a fifth**, at both horizons, with the whole interval above zero. Why: one multiplier $k$ cannot fit waves of different sizes. A wave of one route is relatively noisier than a wave of ten. Split by routes in the wave (1-day horizon): for single-route waves the simple rule covers only 0.78 of actuals; for waves of 7 or more routes it covers 0.99 at 12.5% above actual. The model's margin over actual shrinks from 12.9% to 6.1% as waves grow, with coverage 0.86 and 0.91. That is exactly where cells are decided, because the big waves set the peak.
+- At the route grain the gain is small but significant (about 6%).
+- The model's coverage is slightly below nominal at the wave grain (0.87 vs 0.90). It trades a few more small misses for much less over-forecast on big waves. The next table shows that this does not turn into late parcels.
+
+**Cell-count consequence.** For each of the 122 test station-days at the six sized stations: build a forecast day from the real departure times with each route's count set to its wave forecast ÷ routes in the wave (robot share only), find the smallest FIFO bank with < 1% late (§5c, 2 replications), then run the same simulation on the day's **real** per-route counts with that bank (4 replications) and record the late share. "Needed" is the same search run on the real counts. No peak uplift here: these are observed days.
+
+| 1-day horizon, 122 station-days | Cell-days bought (needed: 379) | Days ≥ 1% late | Mean / worst late share | Cells over need | Cells under need | Days sized exactly |
+|---|---|---|---|---|---|---|
+| **Quantile model** | **400** | **0%** | 0.01% / 0.7% | **21** | 0 | **83%** |
+| Routes × ppr, calibrated | 422 | 0% | 0.00% / 0.0% | 43 | 0 | 65% |
+| Routes × hour ppr | 428 | 0% | 0.00% / 0.0% | 49 | 0 | 60% |
+| Trailing mean × 1.3 | 437 | 15% | 2.2% / 36.9% | 76 | 18 | 41% |
+| Same weekday last week | 352 | 44% | 9.7% / 63.4% | 37 | 64 | 33% |
+
+At a 7-day horizon: model 410 cell-days (31 over, 0 under, 75% exact); routes × ppr 431 (52 over, 0 under, 58% exact); trailing mean × 1.3 413 cell-days but 25% of days ≥ 1% late (worst 57%).
+
+- **Against the honest rule**, the model buys half the surplus cells (21 against 43 cell-days over need) with no extra late days. Absolute cell error per station-day falls by 0.18 cells (90% CI 0.13 to 0.23; 0.17, CI 0.11 to 0.24, at 7 days), bootstrap over test dates. Per station (1-day): DLA7 90 vs 96 cell-days over 16 days (need 84), DBO3 65 vs 68 (60), DLA9 73 vs 79 (72), DLA8 33 vs 36 (33), DSE4 70 vs 73 (70), DSE5 69 vs 70 (60).
+- **The naive rules fail in both directions at once**: trailing mean × 1.3 buys more cells than the model and still leaves 15% of days with over 1% of parcels late, because it over-sizes small-coverage days and under-sizes big ones.
+- What this means for a proposal: on a day-ahead or week-ahead basis, a wave-level quantile forecast sizes the bank right on about four days in five, against two in three for the hand rule, without adding late parcels. For the one-off design-day number in §5 the hand-built design day stays, because a single P90 day does not need a forecast.
+
 ## 6. Validation
 
 All figures are from `public/data/validation.json`, written by `pipeline/scripts/validate.py`.
@@ -159,15 +211,17 @@ All figures are from `public/data/validation.json`, written by `pipeline/scripts
 
 6. **Little's law** $L_q = \lambda W_q$, with $L_q$ sampled at 50,000 random instants: 0.974 vs 0.965; 7.10 vs 7.04; 5.24 vs 5.19 (all within 1%).
 7. **Factor-split time holdout.** Train on days before 2018-08-15, test on the later days (3 test days at DLA7, DBO3 and DLA8; 12 at the others). Mean sampled routes per day rose 30–81% at 5 of 6 stations (DLA8 fell 10%), while packages per route changed by −1% to −11%. The apparent volume trend therefore comes from sample coverage, not demand. With 3 test days at half the stations, this is a consistency check, not a forecast test.
-8. **Reconciliation.** Parsed package count equals the raw key count (1,457,175).
+8. **Forecast validation** (§5i): rolling-origin folds of whole dates, training strictly before (first test date − horizon); a test perturbs every day after the origin and checks the features do not change; pinball loss and the naive baselines are checked by hand in unit tests; bootstrap over whole test dates.
+9. **Reconciliation.** Parsed package count equals the raw key count (1,457,175).
 
-Tests: `pipeline/tests/` (24 pytest tests): Erlang C textbook value (A=2, c=3 → 4/9), M/M/1 reduction, instability flag, hand-calc rounding, Erlang monotonicity, DES vs Erlang C, Little's law, a single-server trace worked by hand, gamma mean/CV, wave-window bounds, monotonicity in *c*, NaN-filter split points, ingest on a fixture, envelope box rule, deadline floor by hand, floor ≥ hand rule and zero-late impossible below the floor, EDF vs FIFO hand trace, arrival-keyed priority = FIFO, EDF never worse than FIFO on a wave, coverage diagnostic, bootstrap interval coverage, bootstrap days use real departure sets, ladder order on the exported results, labour case by hand.
+Tests: `pipeline/tests/` (33 pytest tests): Erlang C textbook value (A=2, c=3 → 4/9), M/M/1 reduction, instability flag, hand-calc rounding, Erlang monotonicity, DES vs Erlang C, Little's law, a single-server trace worked by hand, gamma mean/CV, wave-window bounds, monotonicity in *c*, NaN-filter split points, ingest on a fixture, envelope box rule, deadline floor by hand, floor ≥ hand rule and zero-late impossible below the floor, EDF vs FIFO hand trace, arrival-keyed priority = FIFO, EDF never worse than FIFO on a wave, coverage diagnostic, bootstrap interval coverage, bootstrap days use real departure sets, ladder order on the exported results, labour case by hand; forecast: pinball loss by hand (y = 10, 20; f = 12, 15; q = 0.9 → 0.2 and 4.5, mean 2.35), trailing-mean and last-week baselines by hand, features by hand, no feature reads past the origin (h = 1 and 7), consecutive folds, block bootstrap by hand, the model learns an hour effect a flat rule misses (synthetic fixture, test only), exported forecast consistency.
 
 ## 7. Limitations
 
 - Volumes are the public route sample, not full station throughput (§1). The design route count is a sample-coverage bound with a bootstrap interval, not the station's true route count.
 - Inbound timing is synthetic (uniform 3 h → 1 h before each real departure). The wave ratio, the floor and the EDF saving all rest on it; §5f gives the flip points, and the inbound curve is the third item on the week-1 list.
-- Only 29–39 days per station, one summer. No forecast model is fitted because ~30 points per station do not support one honestly.
+- Only 29–39 days per station, one summer. A per-station daily forecast is not supported by ~30 points; the forecast in §5i is pooled over 17 stations and scored at the wave and route grain, where there are 835 and 3,861 test units. At the day grain it does not beat the simple rule.
+- The forecast treats the day's route count and departure hours as known in advance. In this sample that count is the number of sampled routes, so the forecast's skill at following coverage swings would, at a real station, be skill at following its planned route count. Test period: 25 dates in one August.
 - The simulation pools cells behind one queue. Destination-to-cell assignment and recirculation are not simulated and can only raise the count; at DLA7 destinations already bind at 7 cells with 8 per cell, which cancels the EDF saving there.
 - The bootstrap design days use FIFO only with 2 replications each; the EDF ladder runs on the point design day only. Sensitivity flip points use 4 replications per point.
 - The break-even capex is labour-only; it ignores cell maintenance, software and other running costs. Cost of one cell short gives overflow heads only as a lower bound.
