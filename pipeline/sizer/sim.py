@@ -27,6 +27,38 @@ def run(arrivals: np.ndarray, service: np.ndarray, c: int) -> tuple[np.ndarray, 
     return start, finish
 
 
+def run_priority(arrivals: np.ndarray, service: np.ndarray, key: np.ndarray, c: int) -> tuple[np.ndarray, np.ndarray]:
+    """Non-preemptive priority dispatch on c identical servers.
+
+    Whenever a server frees, it takes the waiting parcel with the smallest key.
+    key = cutoff gives earliest-deadline-first (EDF); key = arrival index gives
+    FIFO and reproduces run() exactly (tested). arrivals must be sorted ascending.
+    """
+    n = len(arrivals)
+    free = [0.0] * c
+    heapq.heapify(free)
+    wait: list[tuple[float, int]] = []
+    start = np.empty(n)
+    finish = np.empty(n)
+    i = done = 0
+    while done < n:
+        f = free[0]
+        # admit everything that has arrived by the time the next server frees
+        while i < n and arrivals[i] <= f:
+            heapq.heappush(wait, (key[i], i)); i += 1
+        if not wait:  # server idles until the next arrival (admit ties too)
+            t = arrivals[i]
+            while i < n and arrivals[i] <= t:
+                heapq.heappush(wait, (key[i], i)); i += 1
+        heapq.heappop(free)
+        _, j = heapq.heappop(wait)
+        s = arrivals[j] if arrivals[j] > f else f
+        start[j], finish[j] = s, s + service[j]
+        heapq.heappush(free, finish[j])
+        done += 1
+    return start, finish
+
+
 def gamma_service(rng, n: int, mean: float, cv: float) -> np.ndarray:
     """Deterministic-plus-noise service: gamma with given mean and coefficient of variation."""
     if cv <= 0:
@@ -50,8 +82,12 @@ def wave_arrivals(rng, departures_s: np.ndarray, counts: np.ndarray, open_h: flo
     return a[o], ix[o]
 
 
-def miss_curve(rng, departures_s, counts, cutoff_h, open_h, close_h, rate_h, cv, c_values, reps=10):
-    """Mean share of packages finishing after cutoff, and P(any route late), per cell count."""
+def miss_curve(rng, departures_s, counts, cutoff_h, open_h, close_h, rate_h, cv, c_values, reps=10, policy="fifo"):
+    """Mean share of packages finishing after cutoff, and P(any route late), per cell count.
+
+    policy: "fifo" (pooled first-come-first-served) or "edf" (earliest cutoff first).
+    miss_ci95 is the half-width of a normal 95% interval over replications.
+    """
     mean = 3600.0 / rate_h
     out = []
     for c in c_values:
@@ -59,11 +95,27 @@ def miss_curve(rng, departures_s, counts, cutoff_h, open_h, close_h, rate_h, cv,
         for _ in range(reps):
             a, ix = wave_arrivals(rng, departures_s, counts, open_h, close_h)
             sv = gamma_service(rng, len(a), mean, cv)
-            s, f = run(a, sv, c)
-            late = f > (departures_s[ix] - cutoff_h * 3600)
+            cut = departures_s[ix] - cutoff_h * 3600
+            s, f = run(a, sv, c) if policy == "fifo" else run_priority(a, sv, cut, c)
+            late = f > cut
             miss.append(late.mean())
             route_late.append(np.bincount(ix[late], minlength=len(counts)).astype(bool).mean())
             p95_wait.append(np.percentile(s - a, 95) / 60)
         out.append({"cells": int(c), "miss_share": float(np.mean(miss)),
+                    "miss_ci95": float(1.96 * np.std(miss, ddof=1) / np.sqrt(reps)) if reps > 1 else None,
                     "routes_late_share": float(np.mean(route_late)), "p95_wait_min": float(np.mean(p95_wait))})
     return out
+
+
+def cells_needed(rng, departures_s, counts, cutoff_h, open_h, close_h, rate_h, cv, c_start, target=0.01, reps=4, policy="fifo", c_max=400):
+    """Smallest c with mean late share < target, scanning down then up from c_start."""
+    def ok(c):
+        return miss_curve(rng, departures_s, counts, cutoff_h, open_h, close_h, rate_h, cv, [c], reps, policy)[0]["miss_share"] < target
+    c = max(1, c_start)
+    if ok(c):
+        while c > 1 and ok(c - 1):
+            c -= 1
+        return c
+    while c < c_max and not ok(c):
+        c += 1
+    return c

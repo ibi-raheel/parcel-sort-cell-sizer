@@ -23,7 +23,254 @@
    "cells_des": 7,
    "cells_for_destinations": 7,
    "cells_for_zone_prefixes": 12,
-   "peak_rate_over_mean_rate": 1.8192192343239912
+   "ladder": {
+    "bound": 6,
+    "bound_1pct": 6,
+    "bound_1pct_ratio": 5.442324337382661,
+    "bound_ratio": 5.5031791065387,
+    "bound_window_h": [
+     -2.131388888888889,
+     1.8916666666666666
+    ],
+    "bound_window_note": "hours relative to the first departure",
+    "fifo": 7,
+    "edf": 6,
+    "edf_saves_cells": 1,
+    "curves": {
+     "fifo": [
+      {
+       "cells": 5,
+       "miss_share": 0.2809825220516171,
+       "miss_ci95": 0.0023322597954599034,
+       "routes_late_share": 1.0,
+       "p95_wait_min": 84.29692058332382
+      },
+      {
+       "cells": 6,
+       "miss_share": 0.0685764456060111,
+       "miss_ci95": 0.0019926309938713234,
+       "routes_late_share": 0.722549019607843,
+       "p95_wait_min": 47.23291631043367
+      },
+      {
+       "cells": 7,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 24.33268888280213
+      },
+      {
+       "cells": 8,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 11.297556988049964
+      }
+     ],
+     "edf": [
+      {
+       "cells": 5,
+       "miss_share": 0.20756697157791573,
+       "miss_ci95": 0.001347367733789366,
+       "routes_late_share": 0.33333333333333326,
+       "p95_wait_min": 120.41734443604624
+      },
+      {
+       "cells": 6,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 81.87946051429056
+      },
+      {
+       "cells": 7,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 49.544238820743274
+      },
+      {
+       "cells": 8,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 24.20761080463908
+      }
+     ]
+    },
+    "reps": 20
+   },
+   "bootstrap_days": {
+    "n_days": 200,
+    "cells_needed_hist": {
+     "6": 13,
+     "7": 156,
+     "8": 31
+    },
+    "p_ok": {
+     "6": 0.065,
+     "7": 0.845,
+     "8": 1.0
+    },
+    "cells_90pct_confidence": 8
+   },
+   "peak_rate_over_mean_rate": 1.821127275490943,
+   "coverage": {
+    "corr_packages_routes": 0.9862648694732108,
+    "packages_per_route_mean": 233.76378002089714,
+    "packages_per_route_cv": 0.04724918104688712,
+    "routes_min": 8,
+    "routes_max": 56,
+    "packages_min": 1795,
+    "packages_max": 13206,
+    "p90_over_mean_packages": 1.2980264999886493,
+    "p90_over_mean_packages_well_covered_days": 1.2074117235753408,
+    "well_covered_days": 24,
+    "p90_over_mean_packages_per_route": 1.0678320419148764
+   },
+   "design_routes": 51.1,
+   "design_basis": {
+    "packages_per_route": 233.27625772285967,
+    "packages_per_route_ci90": [
+     229.989333508659,
+     236.6001283240569
+    ],
+    "design_routes": 51.1,
+    "design_routes_ci90": [
+     47.0,
+     55.1
+    ],
+    "n_boot": 2000
+   },
+   "cells_bound": 6,
+   "cells_bound_1pct": 6,
+   "cells_fifo20": 7,
+   "cells_edf20": 6,
+   "cells_90pct_confidence": 8,
+   "p_ok": {
+    "6": 0.065,
+    "7": 0.845,
+    "8": 1.0
+   },
+   "tornado": [
+    {
+     "param": "open_h",
+     "base": 3.0,
+     "flip_up_at": 2.442,
+     "flip_down_at": 3.527
+    },
+    {
+     "param": "close_h",
+     "base": 1.0,
+     "flip_up_at": 0.779,
+     "flip_down_at": 1.359
+    },
+    {
+     "param": "cutoff_h",
+     "base": 0.5,
+     "flip_up_at": 0.672,
+     "flip_down_at": 0.291
+    },
+    {
+     "param": "rate_h",
+     "base": 500.0,
+     "flip_up_at": 461.914,
+     "flip_down_at": 541.016
+    },
+    {
+     "param": "cv",
+     "base": 0.25,
+     "flip_up_at": null,
+     "flip_down_at": null
+    },
+    {
+     "param": "uplift",
+     "base": 0.1,
+     "flip_up_at": 0.19,
+     "flip_down_at": 0.016
+    }
+   ],
+   "one_cell_short": {
+    "cells": 6,
+    "late_parcels": 823,
+    "late_share": 0.06723701404769683,
+    "routes_late_share": 0.7254901960784315,
+    "overflow_heads_at_least": 1
+   },
+   "labour_cases": [
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 0.5,
+     "manual_heads": 13,
+     "robot_side_heads": 4.5,
+     "annual_labour_delta_usd": 207697.5,
+     "breakeven_capex_per_cell_usd": {
+      "18": 44506.607142857145,
+      "24": 59342.142857142855,
+      "36": 89013.21428571429
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 1,
+     "manual_heads": 13,
+     "robot_side_heads": 8,
+     "annual_labour_delta_usd": 122175.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 26180.35714285714,
+      "24": 34907.142857142855,
+      "36": 52360.71428571428
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 2,
+     "manual_heads": 13,
+     "robot_side_heads": 15,
+     "annual_labour_delta_usd": -48870.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": -10472.142857142857,
+      "24": -13962.857142857143,
+      "36": -20944.285714285714
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 0.5,
+     "manual_heads": 12,
+     "robot_side_heads": 4.5,
+     "annual_labour_delta_usd": 183262.5,
+     "breakeven_capex_per_cell_usd": {
+      "18": 39270.53571428572,
+      "24": 52360.71428571428,
+      "36": 78541.07142857143
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 1,
+     "manual_heads": 12,
+     "robot_side_heads": 8,
+     "annual_labour_delta_usd": 97740.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 20944.285714285714,
+      "24": 27925.714285714286,
+      "36": 41888.57142857143
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 2,
+     "manual_heads": 12,
+     "robot_side_heads": 15,
+     "annual_labour_delta_usd": -73305.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": -15708.214285714286,
+      "24": -20944.285714285714,
+      "36": -31416.428571428572
+     }
+    }
+   ]
   },
   {
    "station": "DLA9",
@@ -48,7 +295,254 @@
    "cells_des": 5,
    "cells_for_destinations": 4,
    "cells_for_zone_prefixes": 10,
-   "peak_rate_over_mean_rate": 1.81218694423924
+   "ladder": {
+    "bound": 5,
+    "bound_1pct": 4,
+    "bound_1pct_ratio": 3.951047543245251,
+    "bound_ratio": 4.013106760055184,
+    "bound_window_h": [
+     -0.6952777777777778,
+     1.9222222222222223
+    ],
+    "bound_window_note": "hours relative to the first departure",
+    "fifo": 5,
+    "edf": 4,
+    "edf_saves_cells": 1,
+    "curves": {
+     "fifo": [
+      {
+       "cells": 3,
+       "miss_share": 0.24954444718049737,
+       "miss_ci95": 0.002025816421661684,
+       "routes_late_share": 0.7666666666666668,
+       "p95_wait_min": 95.78146531211098
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.06689239103669048,
+       "miss_ci95": 0.002654177950665564,
+       "routes_late_share": 0.6716666666666665,
+       "p95_wait_min": 43.09655035642901
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 15.111959259666452
+      },
+      {
+       "cells": 6,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 1.8116592009140255
+      }
+     ],
+     "edf": [
+      {
+       "cells": 3,
+       "miss_share": 0.21980423540999752,
+       "miss_ci95": 0.0018240162330404788,
+       "routes_late_share": 0.23333333333333334,
+       "p95_wait_min": 150.43465231625092
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.005128047278995322,
+       "miss_ci95": 0.0023928724112920186,
+       "routes_late_share": 0.028333333333333332,
+       "p95_wait_min": 101.44630146364148
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 56.21660468414389
+      },
+      {
+       "cells": 6,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 0.9407792557780426
+      }
+     ]
+    },
+    "reps": 20
+   },
+   "bootstrap_days": {
+    "n_days": 200,
+    "cells_needed_hist": {
+     "3": 3,
+     "4": 75,
+     "5": 122
+    },
+    "p_ok": {
+     "3": 0.015,
+     "4": 0.39,
+     "5": 1.0
+    },
+    "cells_90pct_confidence": 5
+   },
+   "peak_rate_over_mean_rate": 1.81218694423924,
+   "coverage": {
+    "corr_packages_routes": 0.9962411469549195,
+    "packages_per_route_mean": 248.50953655926853,
+    "packages_per_route_cv": 0.0432793298811601,
+    "routes_min": 2,
+    "routes_max": 39,
+    "packages_min": 506,
+    "packages_max": 9433,
+    "p90_over_mean_packages": 1.7074752132810702,
+    "p90_over_mean_packages_well_covered_days": 1.2522698574950395,
+    "well_covered_days": 15,
+    "p90_over_mean_packages_per_route": 1.050770093189608
+   },
+   "design_routes": 30.400000000000006,
+   "design_basis": {
+    "packages_per_route": 247.47503566333808,
+    "packages_per_route_ci90": [
+     244.58259189640768,
+     250.251294828572
+    ],
+    "design_routes": 30.400000000000006,
+    "design_routes_ci90": [
+     23.600000000000023,
+     35.0
+    ],
+    "n_boot": 2000
+   },
+   "cells_bound": 5,
+   "cells_bound_1pct": 4,
+   "cells_fifo20": 5,
+   "cells_edf20": 4,
+   "cells_90pct_confidence": 5,
+   "p_ok": {
+    "3": 0.015,
+    "4": 0.39,
+    "5": 1.0
+   },
+   "tornado": [
+    {
+     "param": "open_h",
+     "base": 3.0,
+     "flip_up_at": 2.497,
+     "flip_down_at": 3.293
+    },
+    {
+     "param": "close_h",
+     "base": 1.0,
+     "flip_up_at": null,
+     "flip_down_at": 1.516
+    },
+    {
+     "param": "cutoff_h",
+     "base": 0.5,
+     "flip_up_at": 0.83,
+     "flip_down_at": 0.318
+    },
+    {
+     "param": "rate_h",
+     "base": 500.0,
+     "flip_up_at": 428.711,
+     "flip_down_at": 537.5
+    },
+    {
+     "param": "cv",
+     "base": 0.25,
+     "flip_up_at": null,
+     "flip_down_at": null
+    },
+    {
+     "param": "uplift",
+     "base": 0.1,
+     "flip_up_at": 0.286,
+     "flip_down_at": 0.025
+    }
+   ],
+   "one_cell_short": {
+    "cells": 4,
+    "late_parcels": 530,
+    "late_share": 0.06528564393006649,
+    "routes_late_share": 0.6666666666666666,
+    "overflow_heads_at_least": 1
+   },
+   "labour_cases": [
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 0.5,
+     "manual_heads": 8,
+     "robot_side_heads": 3.5,
+     "annual_labour_delta_usd": 122175.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 36652.5,
+      "24": 48870.0,
+      "36": 73305.0
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 1,
+     "manual_heads": 8,
+     "robot_side_heads": 6,
+     "annual_labour_delta_usd": 54300.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 16290.0,
+      "24": 21720.0,
+      "36": 32580.0
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 2,
+     "manual_heads": 8,
+     "robot_side_heads": 11,
+     "annual_labour_delta_usd": -81450.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": -24435.0,
+      "24": -32580.0,
+      "36": -48870.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 0.5,
+     "manual_heads": 8,
+     "robot_side_heads": 3.5,
+     "annual_labour_delta_usd": 122175.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 36652.5,
+      "24": 48870.0,
+      "36": 73305.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 1,
+     "manual_heads": 8,
+     "robot_side_heads": 6,
+     "annual_labour_delta_usd": 54300.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 16290.0,
+      "24": 21720.0,
+      "36": 32580.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 2,
+     "manual_heads": 8,
+     "robot_side_heads": 11,
+     "annual_labour_delta_usd": -81450.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": -24435.0,
+      "24": -32580.0,
+      "36": -48870.0
+     }
+    }
+   ]
   },
   {
    "station": "DBO3",
@@ -73,7 +567,240 @@
    "cells_des": 5,
    "cells_for_destinations": 4,
    "cells_for_zone_prefixes": 7,
-   "peak_rate_over_mean_rate": 1.6954166666666666
+   "ladder": {
+    "bound": 5,
+    "bound_1pct": 5,
+    "bound_1pct_ratio": 4.139354151426481,
+    "bound_ratio": 4.185144202633504,
+    "bound_window_h": [
+     -2.235,
+     0.8027777777777778
+    ],
+    "bound_window_note": "hours relative to the first departure",
+    "fifo": 5,
+    "edf": 5,
+    "edf_saves_cells": 0,
+    "curves": {
+     "fifo": [
+      {
+       "cells": 4,
+       "miss_share": 0.17968368080517616,
+       "miss_ci95": 0.0027869522832238017,
+       "routes_late_share": 1.0,
+       "p95_wait_min": 58.52065670402811
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 25.21737103479991
+      },
+      {
+       "cells": 6,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 8.295475584776394
+      }
+     ],
+     "edf": [
+      {
+       "cells": 4,
+       "miss_share": 0.07657800143781454,
+       "miss_ci95": 0.0038868397775430486,
+       "routes_late_share": 0.1,
+       "p95_wait_min": 115.96821517820524
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 79.65692558173552
+      },
+      {
+       "cells": 6,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 33.95236891360142
+      }
+     ]
+    },
+    "reps": 20
+   },
+   "bootstrap_days": {
+    "n_days": 200,
+    "cells_needed_hist": {
+     "4": 8,
+     "5": 98,
+     "6": 94
+    },
+    "p_ok": {
+     "4": 0.04,
+     "5": 0.53,
+     "6": 1.0
+    },
+    "cells_90pct_confidence": 6
+   },
+   "peak_rate_over_mean_rate": 1.651388888888889,
+   "coverage": {
+    "corr_packages_routes": 0.9929084782578443,
+    "packages_per_route_mean": 229.29799886666973,
+    "packages_per_route_cv": 0.07296978915077515,
+    "routes_min": 5,
+    "routes_max": 36,
+    "packages_min": 1284,
+    "packages_max": 7385,
+    "p90_over_mean_packages": 1.4690173961270767,
+    "p90_over_mean_packages_well_covered_days": 1.233782780664532,
+    "well_covered_days": 16,
+    "p90_over_mean_packages_per_route": 1.077438733332342
+   },
+   "design_routes": 32.0,
+   "design_basis": {
+    "packages_per_route": 223.4153577661431,
+    "packages_per_route_ci90": [
+     218.9330398371867,
+     228.34605857932632
+    ],
+    "design_routes": 32.0,
+    "design_routes_ci90": [
+     27.2,
+     35.2
+    ],
+    "n_boot": 2000
+   },
+   "cells_bound": 5,
+   "cells_bound_1pct": 5,
+   "cells_fifo20": 5,
+   "cells_edf20": 5,
+   "cells_90pct_confidence": 6,
+   "p_ok": {
+    "4": 0.04,
+    "5": 0.53,
+    "6": 1.0
+   },
+   "tornado": [
+    {
+     "param": "open_h",
+     "base": 3.0,
+     "flip_up_at": 2.82,
+     "flip_down_at": 3.598
+    },
+    {
+     "param": "close_h",
+     "base": 1.0,
+     "flip_up_at": 0.668,
+     "flip_down_at": null
+    },
+    {
+     "param": "cutoff_h",
+     "base": 0.5,
+     "flip_up_at": 0.62,
+     "flip_down_at": 0.055
+    },
+    {
+     "param": "rate_h",
+     "base": 500.0,
+     "flip_up_at": 473.633,
+     "flip_down_at": 592.578
+    },
+    {
+     "param": "cv",
+     "base": 0.25,
+     "flip_up_at": null,
+     "flip_down_at": null
+    },
+    {
+     "param": "uplift",
+     "base": 0.1,
+     "flip_up_at": 0.164,
+     "flip_down_at": -0.072
+    }
+   ],
+   "one_cell_short": {
+    "cells": 4,
+    "late_parcels": 1294,
+    "late_share": 0.18603522645578718,
+    "routes_late_share": 1.0,
+    "overflow_heads_at_least": 2
+   },
+   "labour_cases": [
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 0.5,
+     "manual_heads": 9,
+     "robot_side_heads": 3.5,
+     "annual_labour_delta_usd": 104527.50000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": 31358.250000000007,
+      "24": 41811.00000000001,
+      "36": 62716.500000000015
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 1,
+     "manual_heads": 9,
+     "robot_side_heads": 6,
+     "annual_labour_delta_usd": 57015.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 17104.5,
+      "24": 22806.0,
+      "36": 34209.0
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 2,
+     "manual_heads": 9,
+     "robot_side_heads": 11,
+     "annual_labour_delta_usd": -38010.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": -11403.000000000002,
+      "24": -15204.000000000004,
+      "36": -22806.000000000004
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 0.5,
+     "manual_heads": 9,
+     "robot_side_heads": 3.5,
+     "annual_labour_delta_usd": 104527.50000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": 31358.250000000007,
+      "24": 41811.00000000001,
+      "36": 62716.500000000015
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 1,
+     "manual_heads": 9,
+     "robot_side_heads": 6,
+     "annual_labour_delta_usd": 57015.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 17104.5,
+      "24": 22806.0,
+      "36": 34209.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 2,
+     "manual_heads": 9,
+     "robot_side_heads": 11,
+     "annual_labour_delta_usd": -38010.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": -11403.000000000002,
+      "24": -15204.000000000004,
+      "36": -22806.000000000004
+     }
+    }
+   ]
   },
   {
    "station": "DSE5",
@@ -92,13 +819,257 @@
    "sortable_share": 0.9722207735767058,
    "pts_per_5cm": 0.42068665797479476,
    "max_zone_prefixes": 38,
-   "cells_hand_p90": 3,
+   "cells_hand_p90": 4,
    "cells_hand_mean": 2,
-   "cells_erlang": 3,
+   "cells_erlang": 4,
    "cells_des": 4,
    "cells_for_destinations": 3,
    "cells_for_zone_prefixes": 5,
-   "peak_rate_over_mean_rate": 1.8479166666666669
+   "ladder": {
+    "bound": 3,
+    "bound_1pct": 3,
+    "bound_1pct_ratio": 2.8907304687499997,
+    "bound_ratio": 2.926214554917444,
+    "bound_window_h": [
+     -1.9938888888888888,
+     1.1016666666666666
+    ],
+    "bound_window_note": "hours relative to the first departure",
+    "fifo": 4,
+    "edf": 3,
+    "edf_saves_cells": 1,
+    "curves": {
+     "fifo": [
+      {
+       "cells": 2,
+       "miss_share": 0.43571039244186044,
+       "miss_ci95": 0.0019874600896632438,
+       "routes_late_share": 1.0,
+       "p95_wait_min": 139.35031138762528
+      },
+      {
+       "cells": 3,
+       "miss_share": 0.10694949127906976,
+       "miss_ci95": 0.004215488381882972,
+       "routes_late_share": 0.9326086956521739,
+       "p95_wait_min": 48.66633106835327
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 16.795070280476374
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 3.0565001761623867
+      }
+     ],
+     "edf": [
+      {
+       "cells": 2,
+       "miss_share": 0.3672056686046511,
+       "miss_ci95": 0.001593784255171778,
+       "routes_late_share": 0.391304347826087,
+       "p95_wait_min": 188.3692105751366
+      },
+      {
+       "cells": 3,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 103.21724396053597
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 54.09847049382868
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 2.716679374327067
+      }
+     ]
+    },
+    "reps": 20
+   },
+   "bootstrap_days": {
+    "n_days": 200,
+    "cells_needed_hist": {
+     "3": 57,
+     "4": 143
+    },
+    "p_ok": {
+     "3": 0.285,
+     "4": 1.0
+    },
+    "cells_90pct_confidence": 4
+   },
+   "peak_rate_over_mean_rate": 1.8008333333333333,
+   "coverage": {
+    "corr_packages_routes": 0.9927668931763367,
+    "packages_per_route_mean": 230.23649815694347,
+    "packages_per_route_cv": 0.07325938229894459,
+    "routes_min": 2,
+    "routes_max": 24,
+    "packages_min": 582,
+    "packages_max": 5403,
+    "p90_over_mean_packages": 1.6369230769230774,
+    "p90_over_mean_packages_well_covered_days": 1.2810647379653783,
+    "well_covered_days": 21,
+    "p90_over_mean_packages_per_route": 1.0788815789638324
+   },
+   "design_routes": 23.0,
+   "design_basis": {
+    "packages_per_route": 226.4763779527559,
+    "packages_per_route_ci90": [
+     223.21141342756184,
+     230.06394056434442
+    ],
+    "design_routes": 23.0,
+    "design_routes_ci90": [
+     19.300000000000004,
+     23.0
+    ],
+    "n_boot": 2000
+   },
+   "cells_bound": 3,
+   "cells_bound_1pct": 3,
+   "cells_fifo20": 4,
+   "cells_edf20": 3,
+   "cells_90pct_confidence": 4,
+   "p_ok": {
+    "3": 0.285,
+    "4": 1.0
+   },
+   "tornado": [
+    {
+     "param": "open_h",
+     "base": 3.0,
+     "flip_up_at": 2.114,
+     "flip_down_at": 3.586
+    },
+    {
+     "param": "close_h",
+     "base": 1.0,
+     "flip_up_at": null,
+     "flip_down_at": 1.602
+    },
+    {
+     "param": "cutoff_h",
+     "base": 0.5,
+     "flip_up_at": 0.79,
+     "flip_down_at": 0.26
+    },
+    {
+     "param": "rate_h",
+     "base": 500.0,
+     "flip_up_at": 416.016,
+     "flip_down_at": 559.766
+    },
+    {
+     "param": "cv",
+     "base": 0.25,
+     "flip_up_at": null,
+     "flip_down_at": null
+    },
+    {
+     "param": "uplift",
+     "base": 0.1,
+     "flip_up_at": 0.319,
+     "flip_down_at": -0.012
+    }
+   ],
+   "one_cell_short": {
+    "cells": 3,
+    "late_parcels": 572,
+    "late_share": 0.10394712936046512,
+    "routes_late_share": 0.9347826086956521,
+    "overflow_heads_at_least": 1
+   },
+   "labour_cases": [
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 0.5,
+     "manual_heads": 7,
+     "robot_side_heads": 3.0,
+     "annual_labour_delta_usd": 86880.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 32580.0,
+      "24": 43440.0,
+      "36": 65160.0
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 1,
+     "manual_heads": 7,
+     "robot_side_heads": 5,
+     "annual_labour_delta_usd": 43440.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 16290.0,
+      "24": 21720.0,
+      "36": 32580.0
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 2,
+     "manual_heads": 7,
+     "robot_side_heads": 9,
+     "annual_labour_delta_usd": -43440.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": -16290.0,
+      "24": -21720.0,
+      "36": -32580.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 0.5,
+     "manual_heads": 6,
+     "robot_side_heads": 3.0,
+     "annual_labour_delta_usd": 65160.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": 24435.000000000004,
+      "24": 32580.000000000004,
+      "36": 48870.00000000001
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 1,
+     "manual_heads": 6,
+     "robot_side_heads": 5,
+     "annual_labour_delta_usd": 21720.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 8145.0,
+      "24": 10860.0,
+      "36": 16290.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 2,
+     "manual_heads": 6,
+     "robot_side_heads": 9,
+     "annual_labour_delta_usd": -65160.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": -24435.000000000004,
+      "24": -32580.000000000004,
+      "36": -48870.00000000001
+     }
+    }
+   ]
   },
   {
    "station": "DLA8",
@@ -123,7 +1094,251 @@
    "cells_des": 4,
    "cells_for_destinations": 3,
    "cells_for_zone_prefixes": 6,
-   "peak_rate_over_mean_rate": 1.9604474908064091
+   "ladder": {
+    "bound": 3,
+    "bound_1pct": 3,
+    "bound_1pct_ratio": 2.662541241806263,
+    "bound_ratio": 2.701051802621995,
+    "bound_window_h": [
+     -1.5747222222222221,
+     1.476388888888889
+    ],
+    "bound_window_note": "hours relative to the first departure",
+    "fifo": 4,
+    "edf": 3,
+    "edf_saves_cells": 1,
+    "curves": {
+     "fifo": [
+      {
+       "cells": 2,
+       "miss_share": 0.3803404255319148,
+       "miss_ci95": 0.0027297538745246065,
+       "routes_late_share": 1.0,
+       "p95_wait_min": 128.17279407600472
+      },
+      {
+       "cells": 3,
+       "miss_share": 0.052970212765957446,
+       "miss_ci95": 0.0024420698792581683,
+       "routes_late_share": 0.6250000000000002,
+       "p95_wait_min": 43.098410725985005
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 5.711828946945447
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 0.21142124359957223
+      }
+     ],
+     "edf": [
+      {
+       "cells": 2,
+       "miss_share": 0.3878553191489362,
+       "miss_ci95": 0.0017252726980213691,
+       "routes_late_share": 0.4204545454545454,
+       "p95_wait_min": 166.60211554210574
+      },
+      {
+       "cells": 3,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 87.38371620632599
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 21.890870007866816
+      },
+      {
+       "cells": 5,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 0.1526211629992003
+      }
+     ]
+    },
+    "reps": 20
+   },
+   "bootstrap_days": {
+    "n_days": 200,
+    "cells_needed_hist": {
+     "3": 36,
+     "4": 164
+    },
+    "p_ok": {
+     "3": 0.18,
+     "4": 1.0
+    },
+    "cells_90pct_confidence": 4
+   },
+   "peak_rate_over_mean_rate": 1.9604474908064091,
+   "coverage": {
+    "corr_packages_routes": 0.9933402799771968,
+    "packages_per_route_mean": 247.6303459308645,
+    "packages_per_route_cv": 0.03822187374182886,
+    "routes_min": 8,
+    "routes_max": 27,
+    "packages_min": 1988,
+    "packages_max": 6703,
+    "p90_over_mean_packages": 1.4323892977310757,
+    "p90_over_mean_packages_well_covered_days": 1.227840011075091,
+    "well_covered_days": 19,
+    "p90_over_mean_packages_per_route": 1.0404444296460311
+   },
+   "design_routes": 22.0,
+   "design_basis": {
+    "packages_per_route": 248.11160714285714,
+    "packages_per_route_ci90": [
+     245.2319651240778,
+     250.90912698412697
+    ],
+    "design_routes": 22.0,
+    "design_routes_ci90": [
+     18.599999999999998,
+     23.039999999999964
+    ],
+    "n_boot": 2000
+   },
+   "cells_bound": 3,
+   "cells_bound_1pct": 3,
+   "cells_fifo20": 4,
+   "cells_edf20": 3,
+   "cells_90pct_confidence": 4,
+   "p_ok": {
+    "3": 0.18,
+    "4": 1.0
+   },
+   "tornado": [
+    {
+     "param": "open_h",
+     "base": 3.0,
+     "flip_up_at": 1.955,
+     "flip_down_at": 3.375
+    },
+    {
+     "param": "close_h",
+     "base": 1.0,
+     "flip_up_at": null,
+     "flip_down_at": 1.254
+    },
+    {
+     "param": "cutoff_h",
+     "base": 0.5,
+     "flip_up_at": null,
+     "flip_down_at": 0.33
+    },
+    {
+     "param": "rate_h",
+     "base": 500.0,
+     "flip_up_at": 399.414,
+     "flip_down_at": 533.984
+    },
+    {
+     "param": "cv",
+     "base": 0.25,
+     "flip_up_at": null,
+     "flip_down_at": null
+    },
+    {
+     "param": "uplift",
+     "base": 0.1,
+     "flip_up_at": 0.373,
+     "flip_down_at": 0.023
+    }
+   ],
+   "one_cell_short": {
+    "cells": 3,
+    "late_parcels": 323,
+    "late_share": 0.05493617021276596,
+    "routes_late_share": 0.6363636363636364,
+    "overflow_heads_at_least": 1
+   },
+   "labour_cases": [
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 0.5,
+     "manual_heads": 7,
+     "robot_side_heads": 3.0,
+     "annual_labour_delta_usd": 119460.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": 44797.50000000001,
+      "24": 59730.00000000001,
+      "36": 89595.00000000001
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 1,
+     "manual_heads": 7,
+     "robot_side_heads": 5,
+     "annual_labour_delta_usd": 59730.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": 22398.750000000004,
+      "24": 29865.000000000004,
+      "36": 44797.50000000001
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 2,
+     "manual_heads": 7,
+     "robot_side_heads": 9,
+     "annual_labour_delta_usd": -59730.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": -22398.750000000004,
+      "24": -29865.000000000004,
+      "36": -44797.50000000001
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 0.5,
+     "manual_heads": 6,
+     "robot_side_heads": 3.0,
+     "annual_labour_delta_usd": 89595.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": 33598.12500000001,
+      "24": 44797.50000000001,
+      "36": 67196.25000000001
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 1,
+     "manual_heads": 6,
+     "robot_side_heads": 5,
+     "annual_labour_delta_usd": 29865.000000000004,
+     "breakeven_capex_per_cell_usd": {
+      "18": 11199.375000000002,
+      "24": 14932.500000000002,
+      "36": 22398.750000000004
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 2,
+     "manual_heads": 6,
+     "robot_side_heads": 9,
+     "annual_labour_delta_usd": -89595.00000000001,
+     "breakeven_capex_per_cell_usd": {
+      "18": -33598.12500000001,
+      "24": -44797.50000000001,
+      "36": -67196.25000000001
+     }
+    }
+   ]
   },
   {
    "station": "DSE4",
@@ -148,12 +1363,243 @@
    "cells_des": 3,
    "cells_for_destinations": 3,
    "cells_for_zone_prefixes": 4,
-   "peak_rate_over_mean_rate": 1.4548611111111112
+   "ladder": {
+    "bound": 3,
+    "bound_1pct": 3,
+    "bound_1pct_ratio": 2.593316509046052,
+    "bound_ratio": 2.6247424958881576,
+    "bound_window_h": [
+     -2.2925,
+     0.4097222222222222
+    ],
+    "bound_window_note": "hours relative to the first departure",
+    "fifo": 3,
+    "edf": 3,
+    "edf_saves_cells": 0,
+    "curves": {
+     "fifo": [
+      {
+       "cells": 2,
+       "miss_share": 0.33947244465379167,
+       "miss_ci95": 0.0026461219849283437,
+       "routes_late_share": 1.0,
+       "p95_wait_min": 96.19440190992724
+      },
+      {
+       "cells": 3,
+       "miss_share": 0.0031676872350447477,
+       "miss_ci95": 0.0015508142211282975,
+       "routes_late_share": 0.24705882352941178,
+       "p95_wait_min": 30.491543924541766
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 4.1147298074138074
+      }
+     ],
+     "edf": [
+      {
+       "cells": 2,
+       "miss_share": 0.26386010362694295,
+       "miss_ci95": 0.002242816894332263,
+       "routes_late_share": 0.2941176470588235,
+       "p95_wait_min": 151.04160895756536
+      },
+      {
+       "cells": 3,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 82.78364425611404
+      },
+      {
+       "cells": 4,
+       "miss_share": 0.0,
+       "miss_ci95": 0.0,
+       "routes_late_share": 0.0,
+       "p95_wait_min": 7.398639740251776
+      }
+     ]
+    },
+    "reps": 20
+   },
+   "bootstrap_days": {
+    "n_days": 200,
+    "cells_needed_hist": {
+     "3": 124,
+     "4": 76
+    },
+    "p_ok": {
+     "3": 0.62,
+     "4": 1.0
+    },
+    "cells_90pct_confidence": 4
+   },
+   "peak_rate_over_mean_rate": 1.4548611111111112,
+   "coverage": {
+    "corr_packages_routes": 0.9967851028563451,
+    "packages_per_route_mean": 242.42560929936494,
+    "packages_per_route_cv": 0.04110721819537404,
+    "routes_min": 1,
+    "routes_max": 21,
+    "packages_min": 240,
+    "packages_max": 4967,
+    "p90_over_mean_packages": 1.4620278626238548,
+    "p90_over_mean_packages_well_covered_days": 1.2524000597859206,
+    "well_covered_days": 25,
+    "p90_over_mean_packages_per_route": 1.0551690505771583
+   },
+   "design_routes": 17.0,
+   "design_basis": {
+    "packages_per_route": 240.77130044843048,
+    "packages_per_route_ci90": [
+     238.5255437524897,
+     243.0360422405877
+    ],
+    "design_routes": 17.0,
+    "design_routes_ci90": [
+     15.0,
+     18.60000000000001
+    ],
+    "n_boot": 2000
+   },
+   "cells_bound": 3,
+   "cells_bound_1pct": 3,
+   "cells_fifo20": 3,
+   "cells_edf20": 3,
+   "cells_90pct_confidence": 4,
+   "p_ok": {
+    "3": 0.62,
+    "4": 1.0
+   },
+   "tornado": [
+    {
+     "param": "open_h",
+     "base": 3.0,
+     "flip_up_at": 2.94,
+     "flip_down_at": null
+    },
+    {
+     "param": "close_h",
+     "base": 1.0,
+     "flip_up_at": 0.924,
+     "flip_down_at": null
+    },
+    {
+     "param": "cutoff_h",
+     "base": 0.5,
+     "flip_up_at": 0.532,
+     "flip_down_at": null
+    },
+    {
+     "param": "rate_h",
+     "base": 500.0,
+     "flip_up_at": 491.211,
+     "flip_down_at": 737.891
+    },
+    {
+     "param": "cv",
+     "base": 0.25,
+     "flip_up_at": null,
+     "flip_down_at": null
+    },
+    {
+     "param": "uplift",
+     "base": 0.1,
+     "flip_up_at": 0.129,
+     "flip_down_at": -0.266
+    }
+   ],
+   "one_cell_short": {
+    "cells": 2,
+    "late_parcels": 1438,
+    "late_share": 0.3387600094206312,
+    "routes_late_share": 1.0,
+    "overflow_heads_at_least": 2
+   },
+   "labour_cases": [
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 0.5,
+     "manual_heads": 6,
+     "robot_side_heads": 2.5,
+     "annual_labour_delta_usd": 57015.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 28507.5,
+      "24": 38010.0,
+      "36": 57015.0
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 1,
+     "manual_heads": 6,
+     "robot_side_heads": 4,
+     "annual_labour_delta_usd": 32580.000000000004,
+     "breakeven_capex_per_cell_usd": {
+      "18": 16290.000000000002,
+      "24": 21720.000000000004,
+      "36": 32580.000000000004
+     }
+    },
+    {
+     "manual_rate_h": 275,
+     "ops_per_cell": 2,
+     "manual_heads": 6,
+     "robot_side_heads": 7,
+     "annual_labour_delta_usd": -16290.000000000002,
+     "breakeven_capex_per_cell_usd": {
+      "18": -8145.000000000001,
+      "24": -10860.000000000002,
+      "36": -16290.000000000002
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 0.5,
+     "manual_heads": 6,
+     "robot_side_heads": 2.5,
+     "annual_labour_delta_usd": 57015.0,
+     "breakeven_capex_per_cell_usd": {
+      "18": 28507.5,
+      "24": 38010.0,
+      "36": 57015.0
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 1,
+     "manual_heads": 6,
+     "robot_side_heads": 4,
+     "annual_labour_delta_usd": 32580.000000000004,
+     "breakeven_capex_per_cell_usd": {
+      "18": 16290.000000000002,
+      "24": 21720.000000000004,
+      "36": 32580.000000000004
+     }
+    },
+    {
+     "manual_rate_h": 300,
+     "ops_per_cell": 2,
+     "manual_heads": 6,
+     "robot_side_heads": 7,
+     "annual_labour_delta_usd": -16290.000000000002,
+     "breakeven_capex_per_cell_usd": {
+      "18": -8145.000000000001,
+      "24": -10860.000000000002,
+      "36": -16290.000000000002
+     }
+    }
+   ]
   }
  ],
  "assumptions": {
   "CELL_RATE_H": 500.0,
   "CUTOFF_H": 0.5,
+  "DAYS_PER_YEAR": 300,
   "ENVELOPE": {
    "max_l": 60.0,
    "max_m": 45.0,
@@ -165,7 +1611,15 @@
   "INBOUND_OPEN_H": 3.0,
   "MANUAL_RATE_H": 287.5,
   "MISS_TARGET": 0.01,
+  "N_BOOT": 2000,
+  "N_BOOT_DAYS": 200,
+  "OPS_PER_CELL": [
+   0.5,
+   1,
+   2
+  ],
   "PEAK_UPLIFT": 0.1,
+  "REPS_LADDER": 20,
   "SERVICE_CV": 0.25,
   "UTC_OFFSET_H": {
    "DLA": -7,

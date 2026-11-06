@@ -20,18 +20,35 @@ This tool answers one pre-sales question for a robotic parcel sort cell: **how m
 
 **Important scope note.** The public sample contains a subset of each station's routes. "Daily volume" here means packages on the routes in the sample, not the station's total throughput. The method is unchanged at full volume; the absolute cell counts scale with it.
 
-## 2. Volume profile
+## 2. Volume profile: what the sample can and cannot say
 
-For station *s*, daily volume $V_{s,d} = \sum_{r \in s,d} n_r$. We report mean, P50 and P90 over observed days, and the design volume $V^{*} = 1.10 \times V_{P90\text{-day}}$ (peak season 10% above last year). The design day is the observed day whose volume is closest to the P90, so its real route departure times can be used.
+**Coverage diagnostic (finding).** The public sample holds a different number of each station's routes on each day, and daily package totals mostly track that number. Per station (`coverage` in `validation.json`):
 
-| Station | Days | Mean/day | P90/day | P90 ÷ mean |
-|---|---|---|---|---|
-| DLA7 | 30 | 8,810 | 11,436 | 1.30 |
-| DLA9 | 39 | 4,448 | 7,595 | 1.71 |
-| DBO3 | 29 | 4,414 | 6,485 | 1.47 |
-| DSE5 | 38 | 3,028 | 4,956 | 1.64 |
-| DLA8 | 29 | 3,833 | 5,490 | 1.43 |
-| DSE4 | 39 | 2,753 | 4,026 | 1.46 |
+| Station | corr(daily packages, routes) | Packages/route CV | Routes/day (min to max) | P90 ÷ mean, all days | P90 ÷ mean, days with ≥ ½ max routes | P90 ÷ mean of packages/route |
+|---|---|---|---|---|---|---|
+| DLA7 | 0.986 | 4.7% | 8 to 56 | 1.30 | 1.21 | 1.07 |
+| DLA9 | 0.996 | 4.3% | 2 to 39 | 1.71 | 1.25 | 1.05 |
+| DBO3 | 0.993 | 7.3% | 5 to 36 | 1.47 | 1.23 | 1.08 |
+| DSE5 | 0.993 | 7.3% | 2 to 24 | 1.64 | 1.28 | 1.08 |
+| DLA8 | 0.993 | 3.8% | 8 to 27 | 1.43 | 1.23 | 1.04 |
+| DSE4 | 0.997 | 4.1% | 1 to 21 | 1.46 | 1.25 | 1.06 |
+
+So "the P90 day is 1.3–1.7× the mean day" is mainly a property of how the sample was drawn, not of demand. An earlier version of this tool led with that ratio; it is withdrawn. What is stable is packages per route (CV 4–7%), and every station knows its route count and departure schedule.
+
+**Design day = routes × packages per route.** Design routes $R^{*}$ = P90 of sampled routes per day (a sample-coverage bound, not the station's true route count). Packages per route $\bar n = \sum_d V_d / \sum_d R_d$. A day-block bootstrap (2,000 resamples of whole days) gives 90% intervals:
+
+| Station | $R^{*}$ (90% CI) | $\bar n$ (90% CI) | Design day used |
+|---|---|---|---|
+| DLA7 | 51.1 (47.0–55.1) | 233.3 (230.0–236.6) | 2018-08-15, 51 routes |
+| DLA9 | 30.4 (23.6–35.0) | 247.5 (244.6–250.3) | 2018-07-24, 30 routes |
+| DBO3 | 32.0 (27.2–35.2) | 223.4 (218.9–228.3) | 2018-08-16, 32 routes |
+| DSE5 | 23.0 (19.3–23.0) | 226.5 (223.2–230.1) | 2018-08-23, 23 routes |
+| DLA8 | 22.0 (18.6–23.0) | 248.1 (245.2–250.9) | 2018-07-25, 22 routes |
+| DSE4 | 17.0 (15.0–18.6) | 240.8 (238.5–243.0) | 2018-08-21, 17 routes |
+
+The design day is the observed day whose route count is closest to $R^{*}$ (ties broken by packages closest to $R^{*}\bar n$), so its **real departure times and real per-route counts** are used, scaled by 1.10 for peak season.
+
+**Bootstrap design days.** To put an interval on the cell count itself, 200 bootstrap design days are built: resample the days, take that resample's P90 route count $R_b$, use the real departure set of an observed day with $R_b$ routes, and draw $R_b$ real per-route counts from the routes on the resampled days. Each goes through the wave simulation (§5c) and we record the smallest $c$ with < 1% late. $P(c \text{ is enough})$ is the share of the 200 days that $c$ clears.
 
 ## 3. Pick-envelope fit
 
@@ -43,64 +60,86 @@ Measured sortable share: 96.4% (DBO3) to 97.7% (DLA7, DLA9); 97.16% over all 1.4
 
 ## 4. Destinations
 
-One sort destination (gaylord or cart) per outbound route. With 8 destinations per cell (configurator range 6–16+), destination count needs $\lceil R/8 \rceil$ cells, where $R$ is the number of routes on the design day. In the sample this is never the binding constraint (DLA7: 52 routes → 7 cells; throughput also needs 7). Zone-prefix counts are exported for a finer sort plan.
+One sort destination (gaylord or cart) per outbound route. With 8 destinations per cell (configurator range 6–16+), destination count needs $\lceil R/8 \rceil$ cells, where $R$ is the number of routes on the design day. At DLA7 (51 routes → 7 cells) destinations bind at the same count as FIFO throughput, and above the EDF count (6). Elsewhere destinations need no more cells than EDF. Zone-prefix counts are exported for a finer sort plan (DLA7 would need 12 cells to sort to zone prefix).
 
 ## 5. Sizing
 
-Cell rate $\mu = 500$ sorts/h (published configurator figure). Robot volume $\lambda$-total $= V^{*}(1-e)$.
+Cell rate $\mu = 500$ sorts/h (published configurator figure). Robot volume per route $= 1.10\,n_r(1-e)$.
 
-**Inbound shape (synthetic assumption, labelled).** The dataset has no inbound scan times. We tie inbound to the real departures: route *r*'s parcels arrive uniformly in $[D_r - 3\,\text{h},\ D_r - 1\,\text{h}]$ and must be sorted by the cutoff $D_r - 0.5\,\text{h}$. The sort span is therefore $T = (\max D - \min D) + 2\,\text{h}$. Because departures are clustered, the peak 15-minute inbound rate is 1.45–1.96× the span-average rate.
+**Inbound shape (synthetic assumption, labelled).** The dataset has no inbound scan times. We tie inbound to the real departures: route *r*'s parcels arrive uniformly in $[D_r - 3\,\text{h},\ D_r - 1\,\text{h}]$ and must be sorted by the cutoff $D_r - 0.5\,\text{h}$. The sort span is $T = (\max D - \min D) + 2\,\text{h}$. **Headline finding:** because real departures cluster, the peak 15-minute inbound rate is **1.45–1.96× the span-average rate** (DLA7 1.82, DLA9 1.81, DBO3 1.65, DSE5 1.80, DLA8 1.96, DSE4 1.45). This rests on the real departure times; only the shape of each route's inbound window is assumed, and §5f measures how much that matters.
 
-**(a) Spreadsheet rule (hand calculation).**
-$$c_{hand} = \left\lceil \frac{V(1-e)}{T\,\mu} \right\rceil$$
-computed both for $V^{*}$ (P90 + 10%) and for $1.10\,\bar V$ (the average-day rule).
+**(a) Spreadsheet rule.** $c_{hand} = \lceil V(1-e)/(T\mu) \rceil$, for the design day and (for reference only) the average sampled day.
 
-**(b) Erlang C (M/M/c).** With offered load $a = \lambda/\mu$ and $\rho = a/c$,
-$$C(c,a) = \frac{\frac{a^c}{c!}\frac{1}{1-\rho}}{\sum_{k=0}^{c-1}\frac{a^k}{k!} + \frac{a^c}{c!}\frac{1}{1-\rho}},\qquad P(W_q > t) = C(c,a)\,e^{-(c\mu-\lambda)t}.$$
-$c_{erlang}$ = smallest *c* with $P(W_q > 0.5\,\text{h}) < 1\%$ at the span-average $\lambda$. (Computed via the stable Erlang B recursion $B_k = aB_{k-1}/(k + aB_{k-1})$.)
+**(b) Erlang C, kept only as a stability check.** $P(W_q > t) = C(c,a)\,e^{-(c\mu-\lambda)t}$ with $a=\lambda/\mu$. With $\mu = 500$/h and $t = 0.5$ h, the exponent is $250(c-a)$, so $P(W_q > t) < 1\%$ as soon as $c - a > \ln(100)/(\mu t) = 0.018$. Erlang C at this threshold therefore collapses to $c = \lceil a \rceil$, which *is* the hand rule. The earlier claim that "Erlang C agrees with the hand rule" was one method counted twice; it is now reported only as a stability check.
 
-**(c) Discrete-event simulation** (`sizer/sim.py`). A pooled bank of *c* identical cells, FIFO, shared infeed. Each arrival in time order takes the cell that frees first, which is exact for G/G/c FIFO. Service times are gamma with mean 7.2 s and CV 0.25 (deterministic plus noise). Arrivals follow the wave shape above at the design day's real departure times. A parcel is late if it finishes after its route's cutoff. $c_{DES}$ = smallest *c* with mean late share < 1% over 8 replications.
+**(c) Wave simulation, FIFO** (`sizer/sim.py:run`). A pooled bank of *c* identical cells, FIFO, shared infeed; each arrival in time order takes the cell that frees first (exact for G/G/c FIFO). Service is gamma, mean 7.2 s, CV 0.25. A parcel is late if it finishes after its route's cutoff. $c_{FIFO}$ = smallest *c* with mean late share < 1% (20 replications, 95% CI on the late share reported per *c*).
 
-### Results (design day, +10% peak, <1% late)
+**(d) Deadline floor (processor-demand criterion)** (`sizer/deadline.py`). Parcels that arrive at or after $t_1$ and are due by $t_2$ must be processed inside $[t_1,t_2]$, so for any policy
+$$c \;\ge\; \max_{t_1<t_2} \left\lceil \frac{N(t_1,t_2) - L}{\mu\,(t_2-t_1)} \right\rceil,\qquad N(t_1,t_2) = \sum_{r:\,K_r\le t_2} n_r \cdot \mathrm{clip}\!\left(\frac{B_r-\max(t_1,A_r)}{B_r-A_r},0,1\right)$$
+with $[A_r,B_r]$ route *r*'s inbound window and $K_r$ its cutoff. $t_2$ runs over every cutoff (demand only steps there), $t_1$ over a 5-minute grid plus every $A_r$, $B_r$. $L = 0$ gives the zero-late floor; $L = 0.01\sum n_r$ gives the floor for the same < 1%-late target the simulation uses. $N$ is the fluid expectation under the inbound assumption.
 
-| Station | Mean rule | P90 rule | Erlang C | Wave simulation |
-|---|---|---|---|---|
-| DLA7 | 5 | 6 | 6 | **7** |
-| DLA9 | 3 | 4 | 4 | **5** |
-| DBO3 | 3 | 5 | 5 | **5** |
-| DSE5 | 2 | 3 | 3 | **4** |
-| DLA8 | 2 | 3 | 3 | **4** |
-| DSE4 | 3 | 3 | 3 | **3** |
+**(e) Earliest-deadline-first induction** (`sizer/sim.py:run_priority`). Same bank, but a freed cell takes the waiting parcel with the earliest cutoff (heap keyed by cutoff). With the key set to arrival order it reproduces FIFO exactly (tested). This asks whether deadline-aware sequencing in the cell-control software can meet the same cutoff with fewer cells.
 
-- Sizing on the average day under-builds at 5 of 6 stations, by 2 cells at each (18 cells in total across the six, against 28 from the simulation).
-- Even P90-based steady-state sizing (hand rule or Erlang C, which agree everywhere) is one cell short at 4 of 6 stations, because the departure waves concentrate inbound.
-- DLA7 detail: with 6 cells, 3.6% of parcels are late and 58% of routes have at least one late parcel; with 7 cells, none are late and the P95 queue wait is 20 min.
+### Results (design day, +10% peak, < 1% late)
 
-## 6. Validation
+| Station | Avg-day rule* | Design-day rule (= Erlang C) | **Floor, 1% late** | **EDF** | **FIFO** | FIFO, 90% of bootstrap days | Destinations ⌈R/8⌉ |
+|---|---|---|---|---|---|---|---|
+| DLA7 | 5 | 6 | 6 | **6** | **7** | 8 (P(7) = 0.85) | 7 |
+| DLA9 | 3 | 4 | 4 | **4** | **5** | 5 (P(4) = 0.39) | 4 |
+| DBO3 | 3 | 5 | 5 | **5** | **5** | 6 (P(5) = 0.53) | 4 |
+| DSE5 | 2 | 4 | 3 | **3** | **4** | 4 (P(3) = 0.29) | 3 |
+| DLA8 | 2 | 3 | 3 | **3** | **4** | 4 (P(3) = 0.18) | 3 |
+| DSE4 | 3 | 3 | 3 | **3** | **3** | 4 (P(3) = 0.62) | 3 |
 
-1. **Hand calculation (DLA7 design day).** $V^{*}$ = 12,542, $e$ = 0.0234, $T$ = 4.589 h. $12{,}542 \times 0.9766 = 12{,}249$; $4.589 \times 500 = 2{,}294$; $12{,}249 / 2{,}294 = 5.34 \Rightarrow 6$ cells. Tool: 6. Match.
-2. **DES vs Erlang C theory** (Poisson arrivals, exponential service, 200k parcels, 10% warm-up dropped):
+\*The average-day rule is shown for reference only: its gap to the design day comes from sample coverage (§2).
 
-   | λ/h | c | P(wait) theory | P(wait) sim | Wq theory (s) | Wq sim (s) |
-   |---|---|---|---|---|---|
-   | 1,400 | 4 | 0.429 | 0.425 | 2.57 | 2.48 |
-   | 1,800 | 4 | 0.788 | 0.785 | 14.18 | 14.06 |
-   | 4,000 | 9 | 0.653 | 0.646 | 4.70 | 4.66 |
+- **The ladder validates the simulation's extra cell.** The 1%-late floor is a hard limit for any policy. EDF reaches it at all six stations. FIFO sits one cell above it at 4 of 6 (DLA7, DLA9, DSE5, DLA8). So the extra cell in the FIFO simulation is real and not a modelling artefact: it is the cost of serving parcels in arrival order when departures are clustered.
+- **Deadline-aware induction saves one cell on throughput at 4 of 6 stations** (24 cells against 28 in total), under the stated inbound assumption. At DLA7 the 51 route destinations still need 7 cells at 8 gaylords each, so the saving is realised there only with 9 or more destinations per cell; at DLA9, DSE5 and DLA8 it holds with 8. Where EDF saves nothing (DBO3, DSE4), FIFO is already at the floor and there is no slack.
+- **One cell short (FIFO, design day):** DLA7 6 cells → 6.7% of parcels (823) late, 73% of routes with a late parcel; DLA9 6.5%, 67%; DBO3 18.6%, 100%; DSE5 10.4%, 93%; DLA8 5.5%, 64%; DSE4 34%, 100%.
+- **Uncertainty from the sample.** Across 200 bootstrap design days, the FIFO count that clears 90% of them is one higher than the point estimate at DLA7, DBO3 and DSE4.
+- DLA7 FIFO detail (20 reps): 6 cells → 6.86% late (95% CI ± 0.20 pt); 7 cells → 0.0%. EDF: 6 cells → 0.0%.
 
-3. **Little's law** $L_q = \lambda W_q$, with $L_q$ measured independently by sampling the queue length at 50,000 random instants: 0.974 vs 0.965; 7.10 vs 7.04; 5.24 vs 5.19 (all within 1%).
-4. **Time holdout baseline.** Size from days before 2018-08-15, test on the 45 later station-days. The mean rule is exceeded on 37/45 (82%) of later days; the P90 rule on 15/45 (33%). Volume trends up through August in the sample, so P90 alone is not enough: the 10% peak uplift and a trend term matter. This is reported, not hidden.
-5. **Reconciliation.** Parsed package count equals the raw key count (1,457,175).
+### 5f. Sensitivity of the cell count to each assumption
 
-Tests: `pipeline/tests/` (14 pytest tests): Erlang C textbook value (A=2, c=3 → 4/9), M/M/1 reduction, instability flag, hand-calc rounding, DES vs Erlang C, Little's law, a deterministic single-server trace worked by hand, gamma mean/CV, wave-window bounds, monotonicity in *c*, NaN-filter split points, ingest on a fixture, envelope box rule.
+One assumption at a time on each design day (common random numbers, 4 replications per point). The flip point is found by bisection (8 steps) on the continuous parameter: the value at which the FIFO count rises (↑) or falls (↓) from its base value. "–" = no flip in the searched range.
 
-## 7. Limitations
+| Station (base FIFO cells) | Sustained cell rate (500/h) ↑ / ↓ | Peak uplift (10%) ↑ / ↓ | Inbound opens before departure (3 h) ↑ / ↓ | Inbound closes before departure (1 h) ↑ / ↓ | Cutoff buffer (30 min) ↑ / ↓ | Service CV (0.25) |
+|---|---|---|---|---|---|---|
+| DLA7 (7) | 462 / 541 | 19% / 1.6% | 2.44 h / 3.53 h | 0.78 h / 1.36 h | 40 min / 17 min | – |
+| DLA9 (5) | 429 / 538 | 29% / 2.5% | 2.50 h / 3.29 h | – / 1.52 h | 50 min / 19 min | – |
+| DBO3 (5) | 474 / 593 | 16% / −7.2% | 2.82 h / 3.60 h | 0.67 h / – | 37 min / 3 min | – |
+| DSE5 (4) | 416 / 560 | 32% / −1.2% | 2.11 h / 3.59 h | – / 1.60 h | 47 min / 16 min | – |
+| DLA8 (4) | 399 / 534 | 37% / 2.3% | 1.96 h / 3.38 h | – / 1.25 h | – / 20 min | – |
+| DSE4 (3) | 491 / 738 | 13% / −27% | 2.94 h / – | 0.92 h / – | 32 min / – | – |
 
-- Volumes are the public route sample, not full station throughput (see §1).
-- Inbound timing is synthetic (uniform 3 h → 1 h before departure). Real trailer schedules would sharpen the wave and could raise the cell count.
-- Only 29–39 days per station, one summer. The P90 is an empirical quantile with wide uncertainty; no ML forecast is used because 30 points per station do not support one honestly.
-- Pooled FIFO across cells ignores destination-to-cell assignment and recirculation; both would add load.
-- The envelope is a parametric box with no weight or material (polybag, irregular) rules.
-- Cell rate and manual rate are published figures, not measured here.
+Service-time variability (CV 0.1 to 1.0) never changes the count: at 7.2 s per pick, the wave, not pick jitter, sets the size.
+
+### 5g. Business case in dollars (no vendor price assumed)
+
+Manual sorters are simulated as servers under the **same wave and the same < 1%-late rule** ($\mu$ = 275 and 300/h), giving peak manual heads for all parcels, and separately for the exception share alone. Robot side = operators per cell × $c_{FIFO}$ + manual exception heads. Operators per cell is an explicit input, shown at 0.5 (one person tending two cells), 1 and 2.
+$$\Delta_{yr} = (h_{manual} - h_{robot}) \times \$18.10 \times H \times 300,\qquad \text{break-even capex per cell}(N\text{ months}) = \frac{\Delta_{yr} \cdot N/12}{c}$$
+$H$ = paid hours per sort day = sort span rounded up to 0.5 h (DLA7: 4.5 h); 300 sort days/yr; wage unburdened (conservative). Both sides are staffed for the design day.
+
+| Station | Manual heads (275/h) | FIFO cells | Δ/yr at 0.5 op/cell | Δ/yr at 1 op/cell | Break-even capex per cell, 24-month payback (0.5 / 1 op) | at 2 ops/cell |
+|---|---|---|---|---|---|---|
+| DLA7 | 13 | 7 | $207,700 | $122,200 | $59,300 / $34,900 | negative |
+| DLA9 | 8 | 5 | $122,200 | $54,300 | $48,900 / $21,700 | negative |
+| DBO3 | 9 | 5 | $104,500 | $57,000 | $41,800 / $22,800 | negative |
+| DSE5 | 7 | 4 | $86,900 | $43,400 | $43,400 / $21,700 | negative |
+| DLA8 | 7 | 4 | $119,500 | $59,700 | $59,700 / $29,900 | negative |
+| DSE4 | 6 | 3 | $57,000 | $32,600 | $38,000 / $21,700 | negative |
+
+**Reading.** At 500/h a cell replaces about 1.8 manual sorters at 275/h. The labour case therefore turns on the operator ratio, not the cell count: at one operator per cell, a DLA7 cell pays back in 24 months if it costs under about $35k; with one operator tending two cells, under about $59k; at two operators per cell, labour alone never pays it back. At 300/h manual, DLA7's break-even falls to $27.9k (1 op) and $52.4k (0.5 op). Cost of one cell short: see §5 (e.g. DLA7 loses 823 parcels per peak day, needing at least 1 extra manual head across the span to recover them; this is a lower bound because the late parcels cluster in the peak).
+
+### 5h. Week-1 site measurements
+
+Ranked by how little each input has to move (median across stations, relative to its base) before the cell count rises:
+
+1. **Sustained cell rate including rejects and recirculation**: the count rises if it falls about 11% (median); DLA7 flips at 462/h, DSE4 at 491/h. Measure it on the customer's own parcel mix, not the nameplate.
+2. **Peak-season volume uplift**: flips at about +13% relative volume (DLA7 at 19% uplift, DSE4 at 13%). Get the customer's last peak, by route.
+3. **Inbound trailer arrival curve**: if inbound starts about 18% later (DLA7 2.44 h instead of 3 h before departure), the count rises. This is the synthetic assumption; replace it with the trailer schedule and scan timestamps.
+
+The cutoff buffer (median 34% margin) and the inbound close time (flip at only 3 of 6 stations) matter less.
 
 ## Business-case inputs (exported for the UI)
-Manual sorter rate 275–300 parcels/h (midpoint 287.5, published industry figure); wage $18.10/h (BLS OEWS May 2023 national median, SOC 53-7062, public domain). Capex per cell is a user input with no default claim. Payback months $= 12 \cdot \text{capex} / (\text{annual manual labour} - \text{annual robot labour} - \text{opex})$.
+Manual sorter rate 275–300 parcels/h (midpoint 287.5, published industry figure); wage $18.10/h (BLS OEWS May 2023 national median, SOC 53-7062, public domain). Capex per cell is never assumed; §5g reports the break-even capex per cell instead. Payback months $= 12 \cdot \text{capex} / (\text{annual manual labour} - \text{annual robot labour} - \text{opex})$.

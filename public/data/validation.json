@@ -5,51 +5,262 @@
    "train_days": 27,
    "test_days": 3,
    "test_days_over_train_mean": 1.0,
-   "test_days_over_train_p90": 0.0
+   "test_days_over_train_p90": 0.0,
+   "routes_train_mean": 36.666666666666664,
+   "routes_test_mean": 47.666666666666664,
+   "ppr_train_mean": 234.28032604494376,
+   "ppr_test_mean": 229.11486580447783,
+   "ppr_change": -0.022048203225886742,
+   "routes_change": 0.30000000000000004
   },
   {
    "station": "DLA9",
    "train_days": 27,
    "test_days": 12,
    "test_days_over_train_mean": 0.75,
-   "test_days_over_train_p90": 0.25
+   "test_days_over_train_p90": 0.25,
+   "routes_train_mean": 16.185185185185187,
+   "routes_test_mean": 22.0,
+   "ppr_train_mean": 249.9390996651618,
+   "ppr_test_mean": 245.2930195710087,
+   "ppr_change": -0.01858884864503929,
+   "routes_change": 0.3592677345537756
   },
   {
    "station": "DBO3",
    "train_days": 26,
    "test_days": 3,
    "test_days_over_train_mean": 1.0,
-   "test_days_over_train_p90": 1.0
+   "test_days_over_train_p90": 1.0,
+   "routes_train_mean": 18.23076923076923,
+   "routes_test_mean": 33.0,
+   "ppr_train_mean": 232.0112981864503,
+   "ppr_test_mean": 205.78273809523807,
+   "ppr_change": -0.11304863295982359,
+   "routes_change": 0.8101265822784811
   },
   {
    "station": "DSE5",
    "train_days": 26,
    "test_days": 12,
    "test_days_over_train_mean": 0.9166666666666666,
-   "test_days_over_train_p90": 0.3333333333333333
+   "test_days_over_train_p90": 0.3333333333333333,
+   "routes_train_mean": 11.26923076923077,
+   "routes_test_mean": 17.916666666666668,
+   "ppr_train_mean": 232.78085704597873,
+   "ppr_test_mean": 224.7237205640339,
+   "ppr_change": -0.03461253895269145,
+   "routes_change": 0.5898748577929465
   },
   {
    "station": "DLA8",
    "train_days": 26,
    "test_days": 3,
    "test_days_over_train_mean": 0.3333333333333333,
-   "test_days_over_train_p90": 0.0
+   "test_days_over_train_p90": 0.0,
+   "routes_train_mean": 15.615384615384615,
+   "routes_test_mean": 14.0,
+   "ppr_train_mean": 247.87487302545145,
+   "ppr_test_mean": 245.5111111111111,
+   "ppr_change": -0.009536109430896778,
+   "routes_change": -0.10344827586206895
   },
   {
    "station": "DSE4",
    "train_days": 27,
    "test_days": 12,
    "test_days_over_train_mean": 0.8333333333333334,
-   "test_days_over_train_p90": 0.4166666666666667
+   "test_days_over_train_p90": 0.4166666666666667,
+   "routes_train_mean": 10.11111111111111,
+   "routes_test_mean": 14.416666666666666,
+   "ppr_train_mean": 243.3149736489606,
+   "ppr_test_mean": 240.4245395127748,
+   "ppr_change": -0.011879392759263308,
+   "routes_change": 0.42582417582417587
+  }
+ ],
+ "coverage": [
+  {
+   "station": "DLA7",
+   "corr_packages_routes": 0.9862648694732108,
+   "packages_per_route_mean": 233.76378002089714,
+   "packages_per_route_cv": 0.04724918104688712,
+   "routes_min": 8,
+   "routes_max": 56,
+   "packages_min": 1795,
+   "packages_max": 13206,
+   "p90_over_mean_packages": 1.2980264999886493,
+   "p90_over_mean_packages_well_covered_days": 1.2074117235753408,
+   "well_covered_days": 24,
+   "p90_over_mean_packages_per_route": 1.0678320419148764
+  },
+  {
+   "station": "DLA9",
+   "corr_packages_routes": 0.9962411469549195,
+   "packages_per_route_mean": 248.50953655926853,
+   "packages_per_route_cv": 0.0432793298811601,
+   "routes_min": 2,
+   "routes_max": 39,
+   "packages_min": 506,
+   "packages_max": 9433,
+   "p90_over_mean_packages": 1.7074752132810702,
+   "p90_over_mean_packages_well_covered_days": 1.2522698574950395,
+   "well_covered_days": 15,
+   "p90_over_mean_packages_per_route": 1.050770093189608
+  },
+  {
+   "station": "DBO3",
+   "corr_packages_routes": 0.9929084782578443,
+   "packages_per_route_mean": 229.29799886666973,
+   "packages_per_route_cv": 0.07296978915077515,
+   "routes_min": 5,
+   "routes_max": 36,
+   "packages_min": 1284,
+   "packages_max": 7385,
+   "p90_over_mean_packages": 1.4690173961270767,
+   "p90_over_mean_packages_well_covered_days": 1.233782780664532,
+   "well_covered_days": 16,
+   "p90_over_mean_packages_per_route": 1.077438733332342
+  },
+  {
+   "station": "DSE5",
+   "corr_packages_routes": 0.9927668931763367,
+   "packages_per_route_mean": 230.23649815694347,
+   "packages_per_route_cv": 0.07325938229894459,
+   "routes_min": 2,
+   "routes_max": 24,
+   "packages_min": 582,
+   "packages_max": 5403,
+   "p90_over_mean_packages": 1.6369230769230774,
+   "p90_over_mean_packages_well_covered_days": 1.2810647379653783,
+   "well_covered_days": 21,
+   "p90_over_mean_packages_per_route": 1.0788815789638324
+  },
+  {
+   "station": "DLA8",
+   "corr_packages_routes": 0.9933402799771968,
+   "packages_per_route_mean": 247.6303459308645,
+   "packages_per_route_cv": 0.03822187374182886,
+   "routes_min": 8,
+   "routes_max": 27,
+   "packages_min": 1988,
+   "packages_max": 6703,
+   "p90_over_mean_packages": 1.4323892977310757,
+   "p90_over_mean_packages_well_covered_days": 1.227840011075091,
+   "well_covered_days": 19,
+   "p90_over_mean_packages_per_route": 1.0404444296460311
+  },
+  {
+   "station": "DSE4",
+   "corr_packages_routes": 0.9967851028563451,
+   "packages_per_route_mean": 242.42560929936494,
+   "packages_per_route_cv": 0.04110721819537404,
+   "routes_min": 1,
+   "routes_max": 21,
+   "packages_min": 240,
+   "packages_max": 4967,
+   "p90_over_mean_packages": 1.4620278626238548,
+   "p90_over_mean_packages_well_covered_days": 1.2524000597859206,
+   "well_covered_days": 25,
+   "p90_over_mean_packages_per_route": 1.0551690505771583
+  }
+ ],
+ "erlang_collapse": {
+  "mu_h": 500.0,
+  "t_h": 0.5,
+  "margin_erlangs": 0.018420680743952367,
+  "note": "P(Wq>t) = C e^{-(c mu - lam) t} < 0.01 holds once c - a > ln(100)/(mu t) = 0.018, so c_erlang = ceil(a) = hand rule unless a is within 0.018 of an integer"
+ },
+ "week1_ranking": [
+  {
+   "param": "rate_h",
+   "median_rel_margin": 0.109375,
+   "stations_with_flip": 6
+  },
+  {
+   "param": "uplift",
+   "median_rel_margin": 0.12545454545454543,
+   "stations_with_flip": 6
+  },
+  {
+   "param": "open_h",
+   "median_rel_margin": 0.17683333333333334,
+   "stations_with_flip": 6
+  },
+  {
+   "param": "close_h",
+   "median_rel_margin": 0.22099999999999997,
+   "stations_with_flip": 3
+  },
+  {
+   "param": "cutoff_h",
+   "median_rel_margin": 0.3440000000000001,
+   "stations_with_flip": 5
+  }
+ ],
+ "ladder": [
+  {
+   "station": "DLA7",
+   "bound": 6,
+   "bound_1pct": 6,
+   "edf": 6,
+   "fifo": 7,
+   "fifo_8rep": 7,
+   "cells_90pct": 8
+  },
+  {
+   "station": "DLA9",
+   "bound": 5,
+   "bound_1pct": 4,
+   "edf": 4,
+   "fifo": 5,
+   "fifo_8rep": 5,
+   "cells_90pct": 5
+  },
+  {
+   "station": "DBO3",
+   "bound": 5,
+   "bound_1pct": 5,
+   "edf": 5,
+   "fifo": 5,
+   "fifo_8rep": 5,
+   "cells_90pct": 6
+  },
+  {
+   "station": "DSE5",
+   "bound": 3,
+   "bound_1pct": 3,
+   "edf": 3,
+   "fifo": 4,
+   "fifo_8rep": 4,
+   "cells_90pct": 4
+  },
+  {
+   "station": "DLA8",
+   "bound": 3,
+   "bound_1pct": 3,
+   "edf": 3,
+   "fifo": 4,
+   "fifo_8rep": 4,
+   "cells_90pct": 4
+  },
+  {
+   "station": "DSE4",
+   "bound": 3,
+   "bound_1pct": 3,
+   "edf": 3,
+   "fifo": 3,
+   "fifo_8rep": 3,
+   "cells_90pct": 4
   }
  ],
  "hand_calc": {
   "station": "DLA7",
-  "design_packages": 12542,
-  "sort_span_h": 4.588888888888889,
+  "design_packages": 12537,
+  "sort_span_h": 4.391666666666667,
   "exception_rate": 0.023355858071448576,
   "rate_h": 500,
-  "by_hand": "ceil(12542 x (1 - 0.0234) / (4.589 x 500))",
+  "by_hand": "ceil(12537 x (1 - 0.0234) / (4.392 x 500))",
   "by_hand_value": 6,
   "tool_value": 6
  },
@@ -113,8 +324,8 @@
   {
    "station": "DSE5",
    "mean_rule": 2,
-   "p90_rule": 3,
-   "erlang": 3,
+   "p90_rule": 4,
+   "erlang": 4,
    "des": 4
   },
   {
