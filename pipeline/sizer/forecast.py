@@ -28,7 +28,8 @@ import numpy as np
 Q = 0.9
 FEATURES = ["station", "dow", "hour", "routes", "cap_mean", "big_share", "routes_ratio",
             "ppr7", "ppr_all", "ppr_last", "ppr_dow", "ppr_sd", "ppr_hour", "glob_dow"]
-# Wave-size buckets for the size-aware simple rule: 1 | 2-3 | 4-6 | 7+ routes (fixed in advance, not tuned).
+# Wave-size buckets for the size-aware simple rule: 1 | 2-3 | 4-6 | 7+ routes (set once, not tuned; chosen after
+# the per-size breakdown had been seen on the test folds, which can only favour the baseline).
 SIZE_EDGES = [1.5, 3.5, 6.5]
 
 
