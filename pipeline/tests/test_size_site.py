@@ -19,7 +19,8 @@ def test_dla7_reproduces_summary(tmp_path):
     S = next(s for s in json.loads((DATA / "summary.json").read_text())["stations"] if s["station"] == "DLA7")
     L = res["ladder"]
     assert (L["floor"], L["edf"], L["fifo"], L["p90_of_peak_days"]) == (S["cells_bound_1pct"], S["cells_edf20"], S["cells_fifo20"], S["cells_90pct_confidence"]) == (6, 6, 7, 8)
-    assert L["average_throughput_rule"] == S["cells_hand_mean"] == 5        # the average rule is a cell short of FIFO
+    assert L["average_day_rule"] == S["cells_hand_mean"] == 5                # the average day is two cells short of FIFO
+    assert L["busy_day_rule"] == S["cells_hand_p90"] == 6                    # dividing the busy day by the window is one short
     assert res["one_cell_short"]["late_share"] == pytest.approx(S["one_cell_short"]["late_share"]) == pytest.approx(0.0672, abs=1e-4)
     be = {(c["manual_rate_h"], c["ops_per_cell"]): c["24mo"] for c in res["breakeven_capex_per_cell"]}
     assert round(be[(275, 1)]) == 34907 and round(be[(275, 0.5)]) == 59342

@@ -81,7 +81,7 @@ export function App() {
         <header className="intro">
           <p className="intro-k">Parcel Sort Cell Sizer</p>
           <h1 className="intro-q">How many sort cells does a delivery station need to make every departure on a busy day?</h1>
-          <p className="intro-lede"><b>More than the average says.</b> On {summary ? int(summary.stations.reduce((a, x) => a + x.packages_total, 0)) : '899,387'} real parcels, sizing on average throughput came up a cell short at {summary ? summary.stations.filter(x => x.cells_hand_p90 < x.cells_fifo20).length : 3} of {summary ? summary.stations.length : 6} stations. A safety margin that shrinks with wave size fixes it with about half the surplus cells of a flat margin.</p>
+          <p className="intro-lede"><b>More than the average says.</b> On {summary ? int(summary.stations.reduce((a, x) => a + x.packages_total, 0)) : '899,387'} real parcels, dividing a busy day by the sort window came up a cell short at {summary ? summary.stations.filter(x => x.cells_hand_p90 < x.cells_fifo20).length : 3} of {summary ? summary.stations.length : 6} stations. <b>The fix:</b> size against each departure wave, with a P90 margin that shrinks as waves grow. Replayed on {forecast ? forecast.sizing.h1.station_days : 122} held-out station-days, no day left 1% of parcels late, on {forecast ? forecast.sizing.h1.summary.routes_x_ppr_calibrated_by_wave_size.excess_cells : 24} surplus cell-days against {forecast ? forecast.sizing.h1.summary.routes_x_ppr_calibrated.excess_cells : 43} for a flat margin.</p>
           <a className="cta" href="#solution">Here’s the playbook <IconArrow /></a>
           <FloorPlan />
           {list.length > 0 && (

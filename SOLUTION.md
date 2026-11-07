@@ -2,7 +2,7 @@
 
 **Question.** How many robotic sort cells does a delivery station need to make every departure on a busy day, and how big a safety margin should the volume forecast carry?
 
-**Answer, measured on 899,387 real parcels from six delivery stations.** Sizing on average throughput (peak-day volume divided by the sort window) came up one cell short at 3 of 6 stations in simulation. One cell short left 5.5–34% of parcels late, with 64–100% of routes holding a late parcel. A P90 margin that shrinks with wave size fixes it: replayed on 122 held-out station-days, it bought 403 cell-days against 379 needed (24 surplus), where one flat margin bought 422 (43 surplus). No day reached 1% late. A trained quantile model bought 400, within noise of the rule, so the rule fits in a spreadsheet.
+**Answer, measured on 899,387 real parcels from six delivery stations.** Sizing on average throughput (peak-day volume divided by the sort window) came up one cell short at 3 of 6 stations in simulation. One cell short left 5.5–34% of parcels late, with 64–100% of routes holding a late parcel. Sizing against the departure waves, with a P90 forecast margin that shrinks with wave size, closed that gap: replayed on 122 held-out station-days, it bought 403 cell-days against 379 needed (24 surplus), where one flat margin bought 422 (43 surplus). No day reached 1% late. A trained quantile model bought 400, within noise of the rule, so the rule fits in a spreadsheet.
 
 Caveats that stay attached: inbound timing is a stated assumption (each route's parcels arrive 3 h to 1 h before its real departure); volumes are the public route sample, not total station throughput; the wave-size buckets were chosen after the per-size breakdown had been seen on the test folds, which can only favour the rule (disclosed in `pipeline/sizer/forecast.py`).
 
@@ -18,7 +18,7 @@ Caveats that stay attached: inbound timing is a stated assumption (each route's 
    | 4–6 routes | ×1.09 |
    | 7+ routes | ×1.05 |
 
-   Fitted on public data (last 1-day-ahead fold; 7-day-ahead: ×1.15 / 1.09 / 1.07 / 1.03). Refit on the site's own history when it has 14 or more days.
+   Fitted on public data (last 1-day-ahead fold; 7-day-ahead: ×1.15 / 1.09 / 1.06 / 1.03). Refit on the site's own history when it has 14 or more days.
 3. **Size against the departure waves, not the day.** Read the ladder in order: scheduling floor (fewest cells any policy could use), earliest-cutoff-first induction, first-come-first-served, then the count that clears 90% of bootstrap peak days. Check destinations per cell: it can bind before throughput does.
 4. **Measure these first on the site visit, in this order:** sustained cell rate (the count flips about 11% below nameplate, median over six stations), peak uplift (about 13%), then the inbound arrival curve (about 18%). Pick-time variability never flips it (CV 0.1 to 1.0).
 5. **Price the case backwards.** Report the break-even capex per cell for an 18, 24 and 36-month payback at 0.5, 1 and 2 operators per cell, labour only, with no vendor price assumed.
@@ -57,7 +57,7 @@ Output: `out/size-site-<station>.json` and a one-page `out/size-site-<station>.m
 
 - the data check (volume vs routes, parcels per route, envelope fit);
 - design-day P90 by wave with the size-aware margin (refit when 14+ days of history, otherwise the shipped multipliers);
-- the cell ladder: average-throughput rule, P90 hand rule, floor, EDF, FIFO, 90% of bootstrap peak days, destinations;
+- the cell ladder: average-day rule, busy-day hand rule (P90-day volume / sort window), floor, EDF, FIFO, 90% of bootstrap peak days, destinations;
 - the risk of one cell short (% parcels late, % routes late);
 - the measure-first list, ranked by how far each input can move before the count rises;
 - break-even capex per cell.

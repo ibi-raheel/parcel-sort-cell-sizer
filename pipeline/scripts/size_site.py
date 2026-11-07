@@ -174,7 +174,7 @@ def recommend(rec, row, R, pk, P) -> dict:
                        "packages_per_route": ppr, "design_routes": rec["design_basis"]["design_routes"], "envelope_share": rec["envelope"]["sortable_share"]},
         "wave_margins": {"source": k_src, "by_bucket": {BUCKETS[b]: v for b, v in k.items()}},
         "design_day": {"date": dd["date"], "routes": dd["routes"], "design_packages": dd["design_packages"], "peak_over_mean_rate": row["peak_rate_over_mean_rate"], "waves": waves},
-        "ladder": {"average_throughput_rule": sz["cells_hand_mean"], "p90_hand_rule": sz["cells_hand_p90"], "floor": lad["bound_1pct"], "edf": lad["edf"], "fifo": lad["fifo"],
+        "ladder": {"average_day_rule": sz["cells_hand_mean"], "busy_day_rule": sz["cells_hand_p90"], "floor": lad["bound_1pct"], "edf": lad["edf"], "fifo": lad["fifo"],
                    "p90_of_peak_days": sz["bootstrap_days"]["cells_90pct_confidence"], "destinations": sz["cells_for_destinations"],
                    "recommended": max(lad["edf"], sz["cells_for_destinations"]), "recommended_fifo": max(lad["fifo"], sz["cells_for_destinations"]),
                    "destinations_bind": sz["cells_for_destinations"] > lad["edf"]},
@@ -204,7 +204,7 @@ def render(r: dict) -> str:
     out += [f"| {w['hour']:02d}:00 | {w['routes']} | {w['observed']} | x{w['margin']:.3f} | {w['p90']} | {w['p90_peak']} |" for w in r["design_day"]["waves"]]
     out += ["", f"Peak 15-minute inbound is {r['design_day']['peak_over_mean_rate']:.2f}x the shift average.", "",
             "## 3. Cell ladder", "| Rule | Cells |", "|---|---|",
-            f"| Average throughput (peak-day volume / sort window) | {L['average_throughput_rule']} |", f"| P90 hand rule | {L['p90_hand_rule']} |",
+            f"| Average day (mean-day volume / sort window) | {L['average_day_rule']} |", f"| Busy-day hand rule (P90-day volume / sort window) | {L['busy_day_rule']} |",
             f"| Scheduling floor (<1% late, any policy) | {L['floor']} |", f"| Earliest cutoff first | {L['edf']} |", f"| First come, first served | {L['fifo']} |",
             f"| 90% of bootstrap peak days | {L['p90_of_peak_days']} |", f"| Destinations ({A['GAYLORDS_PER_CELL']} per cell) | {L['destinations']} |", ""]
     if s:

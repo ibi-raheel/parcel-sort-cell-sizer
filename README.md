@@ -2,9 +2,9 @@
 
 **Research question.** How many robotic sort cells does a delivery station need to make every departure on a busy day, and how big a safety margin should the volume forecast carry?
 
-**Answer.** More than the average says. On 899,387 real parcels from six delivery stations, sizing on average throughput came up one cell short at 3 of 6 stations in simulation, and one cell short left 5.5–34% of parcels late. A P90 margin that shrinks with wave size (about +15% for a one-route wave down to about +5% for a 7+-route wave) fixes it: on 122 held-out station-days it bought 24 surplus cell-days where one flat margin bought 43, with no day reaching 1% late. A trained quantile model did no better than that rule within noise, so the rule fits in a spreadsheet.
+**Answer.** More than the average says. On 899,387 real parcels from six delivery stations, sizing on average throughput (the busy day's volume divided by the sort window) came up one cell short at 3 of 6 stations in simulation, and one cell short left 5.5–34% of parcels late. Sizing against the departure waves, with a P90 forecast margin that shrinks with wave size (about +15% for a one-route wave down to about +5% for a 7+-route wave), closed that gap: on 122 held-out station-days it bought 24 surplus cell-days where one flat margin bought 43, with no day reaching 1% late. A trained quantile model did no better than that rule within noise, so the rule fits in a spreadsheet.
 
-**The solution:** [SOLUTION.md](SOLUTION.md), a one-page five-step sizing recipe plus `size-site`, a small CLI that turns a station's route plan into a cell count, the risk of one cell short, what to measure first on the site visit, and the break-even price per cell.
+**The solution:** [SOLUTION.md](SOLUTION.md), a one-page five-step sizing recipe plus `size-site`, a small CLI that turns a station's route plan into a cell count, the risk of one cell short, what to measure first on the site visit, and the break-even price per cell. Everything here is measured on public data; the next step is to validate it against one real site's route history and measured cell rate.
 
 **Live demo:** DEMO_URL_PLACEHOLDER
 

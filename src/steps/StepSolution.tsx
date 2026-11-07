@@ -15,7 +15,7 @@ export function StepSolution({ f, v, st, s }: { f: Forecast; v: Validation; st: 
   const be = st.business.cases.find(c => c.manual_rate_h === 275 && c.ops_per_cell === 1)
   return (
     <Step n={8} id="solution" title="The solution"
-      lede={<>A five-step sizing recipe you can run on any station’s route plan.</>}>
+      lede={<>A five-step sizing recipe, measured on six public stations, that runs on any station’s route plan.</>}>
       <ol className="recipe">
         <li><span className="recipe-n" aria-hidden="true">1</span><p><b>Check the data first.</b> If volume tracks routes, size on routes × parcels per route.</p></li>
         <li>
@@ -41,13 +41,13 @@ export function StepSolution({ f, v, st, s }: { f: Forecast; v: Validation; st: 
         <p className="term-cap"><code>size-site routes.csv</code> → cell count, risk of one short, what to measure first, break-even price per cell. On {st.station}:</p>
         <div className="dboard term-board">
           <div className="term-row term-cmd"><span>$</span><code>size-site --station {st.station}</code></div>
-          <div className="term-row"><span>Cells</span><span>{lad.edf} earliest cutoff first · {lad.fifo} first come · {row?.cells_90pct_confidence ?? st.sizing.bootstrap_days.cells_90pct_confidence} on 90% of peak days</span></div>
+          <div className="term-row"><span>Cells</span><span>{lad.edf} earliest cutoff first{st.sizing.cells_for_destinations > lad.edf ? ` (${st.sizing.cells_for_destinations} for destinations)` : ''} · {lad.fifo} first come · {row?.cells_90pct_confidence ?? st.sizing.bootstrap_days.cells_90pct_confidence} on 90% of peak days</span></div>
           {short && <div className="term-row"><span>One short</span><span className="term-late">{pct(short.late_share)} of parcels late · {pct(short.routes_late_share, 0)} of routes</span></div>}
           {flip && flip.flip_up_at !== null && <div className="term-row"><span>Measure first</span><span>Cell rate: count rises below {int(flip.flip_up_at)}/h</span></div>}
-          {be && <div className="term-row"><span>Break-even</span><span>{be.breakeven_capex_per_cell_usd['24'] > 0 ? `${usd(be.breakeven_capex_per_cell_usd['24'])} per cell, 24-month payback, 1 operator per cell` : 'labour alone never pays back at 1 operator per cell'}</span></div>}
+          {be && <div className="term-row"><span>Break-even</span><span>{be.breakeven_capex_per_cell_usd['24'] > 0 ? `Under ${usd(be.breakeven_capex_per_cell_usd['24'])} per cell pays back in 24 months on labour alone, 1 operator per cell` : 'labour alone never pays back at 1 operator per cell'}</span></div>}
         </div>
       </div>
-      <p className="recipe-foot">Built on public delivery-station data. On a real site, week 1 is one station’s route history run through this recipe.</p>
+      <p className="recipe-foot">Measured on public delivery-station data, under a stated inbound-timing assumption. The next step is to validate it on a real line: week 1 runs one site’s route history through this recipe and checks the sustained cell rate on the floor.</p>
     </Step>
   )
 }
