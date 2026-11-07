@@ -70,7 +70,7 @@ export function StepCells({ st, s }: { st: Station; s: Summary }) {
     <Step n={4} id="cells" title="How many cells"
       lede={hand === sim
         ? <>The spreadsheet rule divides the day by the sort window and says {hand} cells. Here a simulation of the wave, parcel by parcel at {int(s.assumptions.CELL_RATE_H)} sorts an hour per cell, agrees: <b>{sim} cells</b> keep late parcels under 1%. Slide the bank and watch the overflow lane.</>
-        : <>The spreadsheet rule divides the day by the sort window and says {hand} cells. A simulation of the wave, parcel by parcel at {int(s.assumptions.CELL_RATE_H)} sorts an hour per cell, says <b>{sim}</b>: the fewest that keep late parcels under 1%. Slide the bank and watch the overflow lane.</>}
+        : <>Dividing the day by the sort window gives {hand} cells. Simulating the wave parcel by parcel, at {int(s.assumptions.CELL_RATE_H)} sorts an hour per cell, gives <b>{sim}</b>: the fewest that keep late parcels under 1%. Slide the bank and watch the overflow lane.</>}
       details={<>
         <p>A pooled bank of identical cells serves parcels first come, first served from a shared infeed; service is gamma with a mean of 7.2 s and CV {s.assumptions.SERVICE_CV}. A parcel is late if it finishes after its route’s cutoff. Each count is the mean of 20 replications. Erlang C at a 30-minute threshold reduces to the spreadsheet rule here, so it is kept only as a stability check.</p>
         <div className="scroll"><table>

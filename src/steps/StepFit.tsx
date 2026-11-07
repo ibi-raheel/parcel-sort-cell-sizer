@@ -55,7 +55,7 @@ function Envelope({ st, def }: { st: Station; def: Env }) {
   return (
     <div ref={ref} className="chart">
       <div className="readout">
-        <div className="readout-main"><span className="readout-num">{pct(share)}</span><span className="readout-cap">of {int(sample.length)} sampled {st.station} parcels fit {env.l} × {env.m} × {env.s} cm</span></div>
+        <div className="readout-main"><span className="readout-num">{pct(share)}</span><span className="readout-cap">of {int(sample.length)} sampled {st.station} parcels fit {env.l} × {env.m} × {env.s} cm{isDefault ? ` (every parcel: ${pct(st.envelope.sortable_share)})` : ''}</span></div>
         <button type="button" className="btn-quiet" onClick={() => setEnv(def)} disabled={isDefault}><IconReset /> Reset to 60 × 45 × 35</button>
       </div>
       <svg ref={svgRef} width={w} height={H} className="env-svg" role="img" aria-label={`Parcels by longest and middle side, with the pick envelope at ${env.l} by ${env.m} cm`}>

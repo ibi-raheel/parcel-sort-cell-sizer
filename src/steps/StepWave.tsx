@@ -37,6 +37,15 @@ function WaveChart({ st }: { st: Station }) {
   const peakI = rates.indexOf(Math.max(...rates))
   const H = mt + ph + mb
   const hours = Math.floor((n * 15) / 60)
+  // Place the average label where no bar rises through it: right end first, then left, shorter text on phones.
+  const avgLabel = (() => {
+    const text = w < 520 ? `avg ${int(avg)}/h` : `shift average ${int(avg)}/h`
+    const tw = text.length * 7
+    const clear = (x0: number, x1: number) => rates.every((r, i) => r <= avg * 1.02 || x(i) + bw < x0 || x(i) > x1)
+    if (clear(ml + pw - 4 - tw, ml + pw)) return { text, x: ml + pw - 4, anchor: 'end' as const }
+    if (clear(ml, ml + 4 + tw)) return { text, x: ml + 4, anchor: 'start' as const }
+    return { text, x: ml + pw - 4, anchor: 'end' as const }
+  })()
 
   return (
     <div ref={ref} className="chart" onMouseLeave={() => setHover(null)}>
@@ -56,7 +65,7 @@ function WaveChart({ st }: { st: Station }) {
           )
         })}
         <line className="ref-line ref-strong" x1={ml} x2={ml + pw} y1={y(avg)} y2={y(avg)} />
-        <text className="ref-label" x={ml + pw - 4} y={y(avg) - 6} textAnchor="end">shift average {int(avg)}/h</text>
+        <text className="ref-label" x={avgLabel.x} y={y(avg) - 6} textAnchor={avgLabel.anchor}>{avgLabel.text}</text>
         <text className="ref-label" x={x(peakI) + bw / 2} y={y(rates[peakI]) - 8} textAnchor={peakI > n * 0.6 ? 'end' : 'middle'}>peak {fix(st.design_day.peak_15min_rate_per_h / avg)}×</text>
         {Array.from({ length: hours + 1 }, (_, h) => (
           <text key={h} className="tick" x={ml + h * 4 * band} y={H - 8} textAnchor={h === 0 ? 'start' : 'middle'}>{h} h</text>

@@ -25,7 +25,8 @@ export function barPath(x: number, y: number, w: number, h: number, r = 4) {
   return `M${x},${y}H${x + w - rr}Q${x + w},${y} ${x + w},${y + rr}V${y + h - rr}Q${x + w},${y + h} ${x + w - rr},${y + h}H${x}Z`
 }
 
-export const tickLabel = (v: number) => (v >= 10000 ? `${v / 1000}K` : v.toLocaleString('en-US'))
+// Thousands as K throughout, so one axis never mixes 5,000 with 10K.
+export const tickLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : v.toLocaleString('en-US'))
 
 export function Tip({ x, y, w, children }: { x: number; y: number; w: number; children: ReactNode }) {
   const left = Math.min(Math.max(8, x - 90), w - 188)
