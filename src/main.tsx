@@ -1,42 +1,12 @@
-import { StrictMode, useEffect, useState } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import '@fontsource/barlow/400.css'
+import '@fontsource/barlow/500.css'
+import '@fontsource/barlow/600.css'
+import '@fontsource/barlow-condensed/500.css'
+import '@fontsource/barlow-condensed/600.css'
+import '@fontsource/barlow-condensed/700.css'
 import './styles.css'
-
-type Station = {
-  station: string; days: number; packages_total: number
-  volume: { mean: number; p90: number; p90_peak: number; p90_over_mean: number }
-  sortable_share: number; pts_per_5cm: number; peak_rate_over_mean_rate: number
-  cells_hand_mean: number; cells_hand_p90: number; cells_erlang: number; cells_des: number | null; cells_for_destinations: number
-  cells_bound_1pct: number; cells_edf20: number | null
-}
-type Summary = { stations: Station[]; dataset: { name: string; url: string; licence: string; routes: number; packages: number; stations: number; dates: string[] } }
-
-const pct = (x: number) => `${(100 * x).toFixed(1)}%`
-
-function App() {
-  const [s, setS] = useState<Summary | null>(null)
-  const [err, setErr] = useState<string | null>(null)
-  useEffect(() => { fetch('/data/summary.json').then(r => r.json()).then(setS).catch(e => setErr(String(e))) }, [])
-  if (err) return <p role="alert">Could not load results: {err}</p>
-  if (!s) return <p>Loading precomputed results…</p>
-  const d = s.dataset
-  return (
-    <main>
-      <h1>Parcel Sort Cell Sizer</h1>
-      <p>How many robotic sort cells a delivery station needs to clear its dispatch waves on a design day, from real parcel data.
-        Precomputed results; the interactive walkthrough comes in the next pass.</p>
-      <div className="scroll"><table>
-        <caption>Cells needed per station at +10% peak (500 sorts/h per cell, &lt;1% of parcels late)</caption>
-        <thead><tr><th>Station</th><th>Days</th><th>Mean/day (sample)</th><th>P90/day (sample)</th><th>Robot-sortable</th><th>Peak 15-min inbound ÷ mean (modelled)</th><th>Cells: hand rule</th><th>Cells: lower bound</th><th>Cells: earliest-cutoff-first</th><th>Cells: FIFO simulation</th><th>Cells: destinations (8 per cell)</th></tr></thead>
-        <tbody>{s.stations.map(r => (
-          <tr key={r.station}><td>{r.station}</td><td>{r.days}</td><td>{r.volume.mean.toLocaleString()}</td><td>{r.volume.p90.toLocaleString()}</td>
-            <td>{pct(r.sortable_share)}</td><td>{r.peak_rate_over_mean_rate.toFixed(2)}</td>
-            <td>{r.cells_hand_p90}</td><td>{r.cells_bound_1pct}</td><td>{r.cells_edf20 ?? '>max'}</td><td><strong>{r.cells_des ?? '>max'}</strong></td><td>{r.cells_for_destinations}</td></tr>))}
-        </tbody>
-      </table></div>
-      <p className="credit">Data: <a href={d.url}>{d.name}</a>, {d.routes.toLocaleString()} routes, {d.packages.toLocaleString()} packages, {d.stations} stations, {d.dates[0]} to {d.dates[1]}. Licence {d.licence}. Volumes are packages on the routes in the public sample, not total station throughput. Inbound timing is a stated assumption (each route arrives 3 h to 1 h before its real departure), so the peak ratio and all cell counts are modelled; see METHOD.md.</p>
-    </main>
-  )
-}
+import { App } from './App'
 
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>)
