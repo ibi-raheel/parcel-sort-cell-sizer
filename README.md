@@ -1,6 +1,10 @@
 # Parcel Sort Cell Sizer
 
-A pre-sales sizing tool for robotic parcel sort cells: from a delivery station's real parcel data, how many cells clear the dispatch waves on a busy day, and what share of parcels a robot can handle.
+**Research question.** How many robotic sort cells does a delivery station need to make every departure on a busy day, and how big a safety margin should the volume forecast carry?
+
+**Answer.** More than the average says. On 899,387 real parcels from six delivery stations, sizing on average throughput came up one cell short at 3 of 6 stations in simulation, and one cell short left 5.5–34% of parcels late. A P90 margin that shrinks with wave size (about +15% for a one-route wave down to about +5% for a 7+-route wave) fixes it: on 122 held-out station-days it bought 24 surplus cell-days where one flat margin bought 43, with no day reaching 1% late. A trained quantile model did no better than that rule within noise, so the rule fits in a spreadsheet.
+
+**The solution:** [SOLUTION.md](SOLUTION.md), a one-page five-step sizing recipe plus `size-site`, a small CLI that turns a station's route plan into a cell count, the risk of one cell short, what to measure first on the site visit, and the break-even price per cell.
 
 **Live demo:** DEMO_URL_PLACEHOLDER
 
@@ -25,6 +29,7 @@ Robotic sort systems are sold one site at a time, and each proposal needs a cell
 - `robust.py`: coverage diagnostics, day-block bootstrap, bootstrap design days.
 - `forecast.py`: P90 forecasting at day, wave and route grain; quantile gradient boosting vs five baselines (including a wave-size-aware calibrated rule), rolling-origin folds by date, paired date-block bootstrap; `scripts/forecast.py` replays each forecast's cell count through the simulation on the real parcels.
 - `business.py`: manual-equivalent labour, annual delta, break-even capex per cell.
+- `site.py`: the per-station sizing (`size_station()`), shared by `scripts/analyse.py` and the `size-site` CLI (`scripts/size_site.py`, see [SOLUTION.md](SOLUTION.md)).
 - Results are precomputed to `public/data/*.json`; the web page is static and needs no API keys.
 
 See [METHOD.md](METHOD.md) for equations, assumptions, validation (hand calculations, bound ≤ EDF ≤ FIFO ladder, DES vs M/M/c theory, Little's law, factor-split holdout, forecast leakage and baseline checks), sensitivity flip points, the forecast (§5i) and limitations (§6, §7).
@@ -37,6 +42,7 @@ npm run dev
 # pipeline (Python 3.12)
 cd pipeline && uv venv -p 3.12 .venv && uv pip install -p .venv numpy scipy ijson pytest scikit-learn
 ./run_all.sh          # downloads ~450 MB once, then ingest, analyse, validate, test
+.venv/bin/python -I scripts/size_site.py --station DLA7   # the sizing recipe on one station
 ```
 
 ## Data

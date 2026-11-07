@@ -101,4 +101,5 @@ export const STEPS = [
   { id: 'forecast', title: 'Forecast vs rule' },
   { id: 'saved', title: 'Cells saved, risk' },
   { id: 'know', title: 'How we know' },
+  { id: 'solution', title: 'The solution' },
 ] as const

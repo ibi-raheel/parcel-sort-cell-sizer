@@ -3,6 +3,7 @@ import type { Forecast, Station, Summary, Validation } from './data'
 import { getJSON, int, STEPS } from './data'
 import { useActiveStep } from './hooks'
 import { FloorPlan } from './FloorPlan'
+import { IconArrow } from './viz'
 import { StepDay } from './steps/StepDay'
 import { StepFit } from './steps/StepFit'
 import { StepWave } from './steps/StepWave'
@@ -10,6 +11,7 @@ import { StepCells } from './steps/StepCells'
 import { StepForecast } from './steps/StepForecast'
 import { StepSaved } from './steps/StepSaved'
 import { StepKnow } from './steps/StepKnow'
+import { StepSolution } from './steps/StepSolution'
 
 const IDS = STEPS.map(s => s.id)
 
@@ -77,8 +79,10 @@ export function App() {
 
       <main id="top">
         <header className="intro">
-          <h1>Parcel Sort Cell Sizer</h1>
-          <p className="intro-lede">How many robotic sort cells does a delivery station need on a busy day? Seven steps through {summary ? int(summary.dataset.packages) : '1.46 million'} real last-mile parcels, from one station’s day to a cell count you can defend.</p>
+          <p className="intro-k">Parcel Sort Cell Sizer</p>
+          <h1 className="intro-q">How many sort cells does a delivery station need to make every departure on a busy day?</h1>
+          <p className="intro-lede"><b>More than the average says.</b> On {summary ? int(summary.stations.reduce((a, x) => a + x.packages_total, 0)) : '899,387'} real parcels, sizing on average throughput came up a cell short at {summary ? summary.stations.filter(x => x.cells_hand_p90 < x.cells_fifo20).length : 3} of {summary ? summary.stations.length : 6} stations. A safety margin that shrinks with wave size fixes it with about half the surplus cells of a flat margin.</p>
+          <a className="cta" href="#solution">Here’s the playbook <IconArrow /></a>
           <FloorPlan />
           {list.length > 0 && (
             <div className="intro-pick">
@@ -99,6 +103,7 @@ export function App() {
             <StepForecast f={forecast} station={station} />
             <StepSaved s={summary} st={st} onPick={setStation} />
             <StepKnow v={validation} st={st} s={summary} />
+            <StepSolution f={forecast} v={validation} st={st} s={summary} />
           </>
         )}
 

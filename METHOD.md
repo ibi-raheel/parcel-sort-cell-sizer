@@ -1,5 +1,9 @@
 # Method
 
+## Research question
+
+How many robotic sort cells does a delivery station need to make every departure on a busy day, and how big a safety margin should the volume forecast carry? The measured answer: sizing on average throughput was one cell short at 3 of 6 stations (§5), and a P90 wave margin that shrinks with wave size sizes 122 held-out station-days with 24 surplus cell-days against 43 for one flat margin and no day at 1% late (§5i). The recipe and the `size-site` tool that apply it to a new station are in [SOLUTION.md](SOLUTION.md).
+
 This tool answers one pre-sales question for a robotic parcel sort cell: **how many cells does a delivery station need to clear its dispatch waves on a busy day, and what share of its parcels can a robot handle?** Every number below comes from `pipeline/` run on public data. Reproduce it with `pipeline/run_all.sh`.
 
 ## 1. Data
