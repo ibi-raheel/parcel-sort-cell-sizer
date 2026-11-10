@@ -109,9 +109,10 @@ export function App() {
 
         <footer className="foot">
           {summary && (
-            <p>Data: <a href={summary.dataset.url}>{summary.dataset.name}</a>, {int(summary.dataset.routes)} routes, {int(summary.dataset.packages)} parcels, {summary.dataset.stations} stations, {summary.dataset.dates[0]} to {summary.dataset.dates[1]}. Licence {summary.dataset.licence}, Amazon.com, Inc. and MIT Center for Transportation &amp; Logistics; used non-commercially. Volumes are parcels on the routes in the public sample, not total station throughput. Inbound arrival timing is a stated assumption tied to real departure times. Wages: BLS OEWS (public domain). Cell and manual sort rates are published industry figures. All results are precomputed by the pipeline in this repository; see METHOD.md.</p>
+            <p>Data: <a href={summary.dataset.url}>{summary.dataset.name}</a>, {int(summary.dataset.routes)} routes, {int(summary.dataset.packages)} parcels, {summary.dataset.stations} stations, {summary.dataset.dates[0]} to {summary.dataset.dates[1]}. Licence {summary.dataset.licence}, Amazon.com, Inc. and MIT Center for Transportation &amp; Logistics; used non-commercially. Volumes are parcels on the routes in the public sample, not total station throughput. Inbound arrival timing is a stated assumption tied to real departure times. Wages: BLS OEWS (public domain). Cell and manual sort rates are published industry figures. All results are precomputed by the pipeline in this repository; see <a href="https://github.com/ibi-raheel/parcel-sort-cell-sizer/blob/main/METHOD.md">METHOD.md</a>.</p>
           )}
           <p className="foot-more">More work at <a href="https://ibiraheel.com">ibiraheel.com</a></p>
+          <p className="foot-code"><a href="https://github.com/ibi-raheel/parcel-sort-cell-sizer">Code, method and tests on GitHub</a></p>
         </footer>
       </main>
     </div>
